@@ -1,0 +1,123 @@
+
+real	22m20.530s
+user	21m27.090s
+sys	0m51.160s
+
+real	0m1.380s
+user	0m1.332s
+sys	0m0.033s
+
+real	0m1.456s
+user	0m1.415s
+sys	0m0.033s
+
+real	0m0.910s
+user	0m0.877s
+sys	0m0.029s
+
+real	0m0.628s
+user	0m0.595s
+sys	0m0.031s
+
+real	0m0.595s
+user	0m0.562s
+sys	0m0.029s
+
+real	0m0.733s
+user	0m0.696s
+sys	0m0.030s
+
+real	0m0.629s
+user	0m0.596s
+sys	0m0.029s
+
+real	0m0.691s
+user	0m0.649s
+sys	0m0.035s
+
+real	0m0.592s
+user	0m0.558s
+sys	0m0.028s
+
+real	0m1.496s
+user	0m1.429s
+sys	0m0.062s
+
+real	0m13.648s
+user	0m13.571s
+sys	0m0.048s
+
+matrix 100x50:
+real	11m44.718s
+user	10m11.206s
+sys	0m50.580s
+
+real	0m1.491s
+user	0m1.443s
+sys	0m0.033s
+
+real	0m12.738s
+user	0m12.674s
+sys	0m0.045s
+
+real	0m12.596s
+user	0m12.523s
+sys	0m0.044s
+
+real	0m12.529s
+user	0m12.452s
+sys	0m0.044s
+Traceback (most recent call last):
+  File "app_main.py", line 52, in run_toplevel
+  File "svd_2.py", line 167, in <module>
+    uFs, mFs = train_some_features(test_matrix, 40)
+  File "svd_2.py", line 141, in train_some_features
+    singular_value = abs(multiply_feature_vectors(uF, uM))
+AttributeError: Matrix instance has no attribute '__abs__'
+
+real	0m0.497s
+user	0m0.470s
+sys	0m0.024s
+
+real	0m12.962s
+user	0m12.894s
+sys	0m0.046s
+
+real	0m11.388s
+user	0m11.337s
+sys	0m0.037s
+
+real	0m10.407s
+user	0m10.355s
+sys	0m0.040s
+
+real	0m10.349s
+user	0m10.279s
+sys	0m0.037s
+
+real	0m11.241s
+user	0m11.176s
+sys	0m0.042s
+
+real	0m10.653s
+user	0m10.595s
+sys	0m0.039s
+Traceback (most recent call last):
+  File "app_main.py", line 52, in run_toplevel
+  File "svd_2.py", line 171, in <module>
+    uFs, mFs = train_some_features(test_matrix, 40)
+  File "svd_2.py", line 144, in train_some_features
+    remainder = abs(remainder.minus(singular_value))
+AttributeError: Matrix instance has no attribute '__abs__'
+
+real	0m0.445s
+user	0m0.417s
+sys	0m0.023s
+
+real	0m11.698s
+user	0m11.630s
+sys	0m0.042s
+
+real	0m1.198s
+user	0m0.800s
+sys	0m0.064s
