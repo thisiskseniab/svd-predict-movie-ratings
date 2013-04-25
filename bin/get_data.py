@@ -6,6 +6,7 @@ import numpy
 import copy
 import random
 from itertools import product
+from tempfile import TemporaryFile
 
 class Matrix:
   def __init__(self, width, height, i):
@@ -65,15 +66,20 @@ def main():
   #     for movie in movies:
   #       print movie
   #       t.set(user, movie, value)
-  file = open('test_matrix.txt', 'w')
-  file.write(str(t))
-  file.close
+  outfile = TemporaryFile()
+  np.save(outfile, t)
+
+  savetxt('test_matrix.txt', t)
+
+  # file = open('test_matrix.txt', 'w')
+  # file.write(str(t))
+  # file.close
+
 
 if __name__ == "__main__":  
   main()
 
-# lala = map_ratings()
-# lalala = set_matrix()
+
 # i want to count the movies
 # count the users
 # make arrays that map the movie ids -> movie indexes and user ids -> user indexes

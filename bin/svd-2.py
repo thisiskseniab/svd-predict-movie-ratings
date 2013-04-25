@@ -393,7 +393,7 @@ uF, mF = train_one_feature_our_way(another_test_matrix)
 # print error_matrix.dict
 # print predicted_rating
 # print test_matrix.dict
-
+'''
 
 
 ratings = open('../data/ml-10M100K/ratings.dat')
@@ -415,7 +415,7 @@ for line in ratings:
 # make arrays that map the movie ids -> movie indexes and user ids -> user indexes
 # write a function that takes a rating and inserts it into a matrix at an appropriate point
 
-
+'''
 
 
 
