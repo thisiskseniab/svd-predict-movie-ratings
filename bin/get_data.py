@@ -1,3 +1,12 @@
+try:
+  import numpypy
+except:
+  pass
+import numpy
+import copy
+import random
+from itertools import product
+
 class Matrix:
   def __init__(self, width, height, i):
     self.width = width
@@ -20,75 +29,51 @@ class Matrix:
     return self.matrix.mean()
 
 # UserId::MovieId::Rating::Timestamp
-['30', '590', '5', '876529220']
+# ['30', '590', '5', '876529220']
 
-def map_ratings():
-  ratings = open('../data/ml-10M100K/ratings_25.dat')
-  count_users = 0
-  count_movies = 0
+# 0::1::Toy Story (1995)::Adventure|Animation|Children|Comedy|Fantasy
+
+def main():
+  ratings = open('../data/ml-10M100K/ratings.dat')
+  movies = open('../data/ml-10M100K/matrix_movies.dat')
   mapped_ratings = {}
-  users = []
-  movies = []
+  # for x, y in [(x,y) for x in a for y in b]:
+  for line2, line in product(movies, ratings):
+    movies_values = line2.split('::')
+    # for line in ratings:
+    ratings_values = line.split('::')
+    # print 'ratings', ratings_values
+    # print 'movies', movies_values
+    if ratings_values[1] == movies_values[1]:
+      # print 'ratings value', ratings_values[1]
+      # print 'movie value', movies_values[1]
+      mapped_ratings[(int(ratings_values[0]),int(movies_values[0]))] = float(ratings_values[2])
 
-  for line in ratings:
-    values = line.split('::')
-    print values
-    if values[0] in users:
-      pass
-    else:
-      users.append(values[0])
-      count_users += 1
-    if values[1] in movies:
-      pass
-    else: 
-      movies.append(values[1])
-      count_movies += 1
+  val_ratings = mapped_ratings.values()
 
-    mapped_ratings[(int(values[0]),int(values[1]))] = float(values[2])
 
-  print mapped_ratings
-  return mapped_ratings
+  t = Matrix(71568, 10681, 0) #71567, 10681
+  for key, value in mapped_ratings.iteritems():
+    # print 'key1', key[0]
+    # print 'key2', key[1]
+    # print 'value', value
+    t.set(key[0], key[1], value)
+  # for value in val_ratings:
+  #   print value
+  #   for user in users:
+  #     print user
+  #     for movie in movies:
+  #       print movie
+  #       t.set(user, movie, value)
+  file = open('test_matrix.txt', 'w')
+  file.write(str(t))
+  file.close
 
-def get_test_matrix():
-  t = Matrix(4, 5, 0) #71567, 10681 139
-  for x in range(t.width):
-    for y in range(t.height):
-      t.set(x, y, random.randrange(1, 5, 1))
-  #t.values = [1,2,3,4,5] * 1000 #200010
-  return t
-
-def set_matrix():
-  ratings = open('../data/ml-10M100K/ratings_25.dat')
-  count_users = 0
-  count_movies = 0
-  mapped_ratings = {}
-  users = []
-  movies = []
-
-  for line in ratings:
-    values = line.split('::')
-    print values
-    if values[0] in users:
-      pass
-    else:
-      users.append(values[0])
-      count_users += 1
-    if values[1] in movies:
-      pass
-    else: 
-      movies.append(values[1])
-      count_movies += 1
-
-    mapped_ratings[(int(values[0]),int(values[1]))] = float(values[2])
-
-  print mapped_ratings
-  print map_ratings.keys()
-
-  t = Matrix(count_users, count_movies, )
-
+if __name__ == "__main__":  
+  main()
 
 # lala = map_ratings()
-lalala = set_matrix()
+# lalala = set_matrix()
 # i want to count the movies
 # count the users
 # make arrays that map the movie ids -> movie indexes and user ids -> user indexes

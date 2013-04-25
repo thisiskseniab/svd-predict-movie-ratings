@@ -8,7 +8,7 @@ import numpy
 import copy
 import random
 
-file = open('output_test.txt', 'w')
+file = open('output_large_matrix.txt', 'w')
 
 class Matrix:
   def __init__(self, width, height, i):
@@ -36,7 +36,7 @@ def get_test_matrix():
   t = Matrix(10000, 5000, 0) #71567, 10681 139
   for x in range(t.width):
     for y in range(t.height):
-      t.set(x, y, 3) #random.randrange(1, 5, 1)
+      t.set(x, y, 3) #random.randrange(1, 5, 1))
   #t.values = [1,2,3,4,5] * 1000 #200010
   return t
 

@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "app_main.py", line 52, in run_toplevel
+  File "get_data.py", line 61, in <module>
+    main()
+  File "get_data.py", line 47, in main
+    t.set(key[0], key[1], value)
+  File "get_data.py", line 19, in set
+    self.matrix[w, h] = value
+IndexError: index (1) out of range (0<=index<10682
+
+real	2m25.680s
+user	0m43.068s
+sys	0m16.822s
+Traceback (most recent call last):
+  File "app_main.py", line 52, in run_toplevel
+  File "get_data.py", line 64, in <module>
+    main()
+  File "get_data.py", line 50, in main
+    t.set(key[0], key[1], value)
+  File "get_data.py", line 19, in set
+    self.matrix[w, h] = value
+IndexError: index (1) out of range (0<=index<10682
+
+real	1m59.090s
+user	0m41.145s
+sys	0m14.828s

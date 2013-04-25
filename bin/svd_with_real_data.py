@@ -33,7 +33,7 @@ class Matrix:
   
 
 def get_test_matrix():
-  t = Matrix(4, 5, 0) #71567, 10681 139
+  t = Matrix(4, 5, 0) #71567, 10681
   for x in range(t.width):
     for y in range(t.height):
       t.set(x, y, random.randrange(1, 5, 1))

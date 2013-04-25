@@ -121,3 +121,8 @@ sys	0m0.042s
 real	0m1.198s
 user	0m0.800s
 sys	0m0.064s
+
+matrix 10000 by 5000:
+real	148m50.339s
+user	143m20.276s
+sys	1m53.601s
