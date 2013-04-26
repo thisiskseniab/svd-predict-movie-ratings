@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>{{movie.title}} &mdash; {{movie.released_on.year}}</h2>
+<h3> Average rating: {{ "%.2f"%average }}</h3>
+
+<a href="{{movie.imdb_url}}">IMDB Details</a>
+{% if user_rating %}
+<h3>Your rating: {{ user_rating.rating }}</h3>
+{% elif prediction %}
+<h3>Our prediction for you: {{ prediction }}</h3>
+{% endif %}
+<h2>Rate this movie</h2>
+<form action="{{url_for('rate_movie', id=movie.id)}}" method="post">
+    <select name="rating">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <input type="submit">
+</form>
+
+{% endblock %}

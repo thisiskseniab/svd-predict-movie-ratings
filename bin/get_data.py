@@ -35,20 +35,13 @@ class Matrix:
 # 0::1::Toy Story (1995)::Adventure|Animation|Children|Comedy|Fantasy
 
 def main():
-  ratings = open('../data/ml-10M100K/ratings.dat')
-  movies = open('../data/ml-10M100K/matrix_movies.dat')
+  ratings = open('../data/ml-10M100K/new_ratings.dat')
   mapped_ratings = {}
   # for x, y in [(x,y) for x in a for y in b]:
-  for line2, line in product(movies, ratings):
-    movies_values = line2.split('::')
-    # for line in ratings:
+  for line in ratings:
     ratings_values = line.split('::')
     # print 'ratings', ratings_values
-    # print 'movies', movies_values
-    if ratings_values[1] == movies_values[1]:
-      # print 'ratings value', ratings_values[1]
-      # print 'movie value', movies_values[1]
-      mapped_ratings[(int(ratings_values[0]),int(movies_values[0]))] = float(ratings_values[2])
+    mapped_ratings[(int(ratings_values[0]),int(ratings_values[1]))] = float(ratings_values[2])
 
   val_ratings = mapped_ratings.values()
 

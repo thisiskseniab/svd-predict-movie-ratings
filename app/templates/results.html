@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h2>Search Results</h2>
+<ul>
+{% for movie in movies %}
+<li><div>
+    <a href="{{url_for("view_movie", id=movie.id)}}">{{movie.title }} &mdash; {{movie.released_on}}</a>
+</div></li>
+{% else %}
+<li>No results :(</li>
+{% endfor %}
+</ul>
+<h2>Search Again</h2>
+<form action="{{url_for("search")}}" method="POST">
+    <input type="text" name="query">
+    <input type="submit">
+</form>
+{% endblock %}

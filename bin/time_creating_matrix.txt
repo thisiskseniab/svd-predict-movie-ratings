@@ -10,3 +10,14 @@ KeyboardInterrupt
 real	0m8.235s
 user	0m6.469s
 sys	0m1.241s
+Traceback (most recent call last):
+  File "app_main.py", line 52, in run_toplevel
+  File "get_data.py", line 80, in <module>
+    main()
+  File "get_data.py", line 42, in main
+    for line2, line in product(movies, ratings):
+KeyboardInterrupt
+
+real	341m6.429s
+user	327m54.857s
+sys	1m54.815s
