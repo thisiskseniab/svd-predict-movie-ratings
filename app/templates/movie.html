@@ -1,4 +1,6 @@
-{% extends "layout.html" %}
+{% extends "bootstrap_responsive.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
 {% block body %}
 <h2>{{movie.title}} &mdash; {{movie.released_on.year}}</h2>
 <h3> Average rating: {{ "%.2f"%average }}</h3>

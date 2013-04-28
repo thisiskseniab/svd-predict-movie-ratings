@@ -8,6 +8,7 @@ import numpy
 import copy
 import random
 
+import redis
 
 class Matrix:
   def __init__(self, width, height, i):
@@ -29,7 +30,44 @@ class Matrix:
     return self.matrix.__str__()
   def mean(self):
     return self.matrix.mean()
-  
+  # this method seems pretty slow
+  def load_from_redis(self):
+    for user_index in xrange(self.width):
+      for movie_index in xrange(self.height):
+        rating = redis_server.get(user_movie_key(user_index, movie_index))
+        if rating > 0:
+          self.set(user_index, movie_index, rating)
+
+
+redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+# vector_type is either 'user' or 'movie'
+def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
+  key = 'feature_vector:'vector_type + ':' + feature_number
+  for index in xrange(len(feature_vector)):
+    redis_server.zadd(key, index, feature_vector[index])
+
+# deliver a user's predicted ratings from all feature vectors in redis
+# get predictions for a user from redis?
+def get_user_predicted_values(user_index):
+  user_predictions = {} # movie_index -> rating
+  user_predictions.set_default(0)
+  movie_feature_vector_keys = redis_server.keys('feature_vector:movie:*')
+  for feature_index in xrange(len(movie_feature_vector_keys)):
+    user_feature_value = redis_server.zrangebyscore('feature_vector:user:' + feature_index, user_index, user_index)
+    movie_feature_vector = redis_server.zrangebyscore('feature_vector:movie:' + feature_index, 0, 'inf')
+    for movie_index in xrange(len(movie_feature_vector)):
+      user_predictions[movie_index] += user_feature_value * movie_feature_vector[movie_index]
+
+
+# loads a matrix from redis
+def load_original_values_from_redis():
+  user_count = 69878
+  movie_count = 10681
+  ratings_matrix = Matrix(user_count, movie_count, 0) #69878, 10681
+  ratings_matrix.load_from_redis()
+  return ratings_matrix
+
 
 def get_test_matrix():
   t = Matrix(10000, 5000, 0) #71567, 10681 139
@@ -78,25 +116,26 @@ def init_feature_vectors(width, height):
 #error = (original rating - product of vectors)*lrate
 #userfeature += error * moviefeature
 #moviefeature += eroor * userfeature
-def train_one_feature(real): #sigma = 0.01
+def train_one_feature(real): #, sigma = 0.01):
   cycles = 0
   max_cycles = 600
   uF, mF = init_feature_vectors(real.width, real.height)
   while True:
     cycles += 1
     predicted = multiply_feature_vectors(uF, mF)
-    if cycles == max_cycles: #errors.mean() < sigma or 
+    if cycles == max_cycles: #errors.mean() < sigma or
       break
     else:
       for w in range(real.width):
         for h in range(real.height):
-          #I thought that error has to be an absolute value, but it was throwing the results off 
-          #increasing the vectors all the time instead of correcting values of vectors 
-          error = (real.index(w, h) - predicted.index(w, h)) * lrate 
+          #I thought that error has to be an absolute value, but it was throwing the results off
+          #increasing the vectors all the time instead of correcting values of vectors
+          error = (real.index(w, h) - predicted.index(w, h)) * lrate
           uv = uF[w]
           uF[w] += error * mF[h]
           mF[h] += error * uv
   return uF, mF
+
 
 #train as many features as necessary by calling one feature function
 #consider adding a sigma to automate features production
@@ -108,7 +147,7 @@ def train_some_features(real, feature_count):
   last_difference = 0
   iteration = 0
   for i in range(feature_count):
-    uF, uM = train_one_feature(remainder) #, sigma
+    uF, uM = train_one_feature(remainder, sigma)
     userFeatures.append(uF)
     movieFeatures.append(uM)
     singular_value = multiply_feature_vectors(uF, uM)
@@ -116,23 +155,32 @@ def train_some_features(real, feature_count):
     remainder = remainder.minus(singular_value)
 
     # sigma /= 4
-    # if abs(remainder.mean() - last_difference) < 0.01:
-    #   break
-    # last_difference = remainder.mean()
+    if abs(remainder.mean() - last_difference) < 0.01:
+      break
+    last_difference = remainder.mean()
     iteration += 1
-    print iteration
+    # print iteration
     # use if have sigma
     # if (real.mean() - remainder.mean()) < 0.8:
-    #   break
+      # break
   return userFeatures, movieFeatures
 
 
-test_matrix = get_test_matrix()
+#test_matrix = get_test_matrix()
+test_matrix = load_original_values_from_redis()
+
+uFs, mFs = train_some_features(test_matrix, 40)
+
+for vector_index in xrange(len(uFs)):
+  write_feature_vector_to_redis('user', uFs[vector_index], vector_index)
+
+for vector_index in xrange(len(mFs)):
+  write_feature_vector_to_redis('movie', mFs[vector_index], vector_index)
 
 
-uFs, mFs = train_some_features(test_matrix, 10)
-savetxt('output_large_matrix.txt', uFs, mFs) #save to txt
-savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
+
+#savetxt('output_large_matrix.txt', uFs, mFs) #save to txt
+#savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
 
 #if want to write or print results 1-by-1
 
@@ -155,7 +203,7 @@ savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
 
 # file.close()
 
-#minimized function calls 
+#minimized function calls
 #had sigma that was unnecessary (?)
 #numpy matrix takes much less memory than anything else
 

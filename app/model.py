@@ -14,27 +14,33 @@ class User(Base):
 	__tablename__ = "users"
 
 	id = Column(Integer, primary_key = True)
+	index = Column(Integer)
 	email = Column(String(64), nullable=True)
 	password = Column(String(64), nullable=True)
 	age = Column(Integer, nullable=True)
 	zipcode = Column(String(15), nullable=True)
 
-	def __init__(self, email = None, password = None, age = None, zipcode = None):
+	def __init__(self, index, email = None, password = None, age = None, zipcode = None):
+		self.index = int(index)
 		self.email = email
 		self.password = password
 		self.age = age
 		self.zipcode = zipcode
 
+
 class Movie(Base):
 	__tablename__ = "movies"
 
 	id = Column(Integer, primary_key = True)
+	index = Column(Integer)
 	title = Column(String(64))
 	genre = Column(String(256))
 
-	def __init__(self, title, genre):
+	def __init__(self, index, title, genre):
+		self.index = int(index)
 		self.title = title
 		self.genre = genre
+
 
 class Rating(Base):
 	__tablename__ = "ratings"
@@ -51,6 +57,7 @@ class Rating(Base):
 		self.rating = rating
 		self.timestamp = timestamp
 
+
 class Tag(Base):
 	__tablename__ = "tags"
 
@@ -65,6 +72,7 @@ class Tag(Base):
 		self.movie_id = movie_id
 		self.tag = tag
 		self.timestamp = timestamp
+
 
 ### End class declarations
 

@@ -1,0 +1,6 @@
+*.pyc
+.DS_Store
+.vagrant
+data/ml-10M100K/*.dat
+*.db
+*.rdb
