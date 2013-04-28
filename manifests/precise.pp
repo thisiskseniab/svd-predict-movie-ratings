@@ -63,7 +63,7 @@ package { "sqlite3":
   ensure => latest,
 }
 
-package { ["Flask", "Flask-SQLAlchemy", "Flask-WTF", "Flask-Bootstrap", "Jinja2", "SQLAlchemy", "WTForms", "Werkzeug", "wsgiref", "redis"]: 
+package { ["Flask", "Flask-SQLAlchemy", "Flask-WTF", "Flask-Bootstrap", "Jinja2", "SQLAlchemy", "WTForms", "Werkzeug", "wsgiref"]: 
   ensure => latest,
   provider => pip,
   require => Package['python-pip']
