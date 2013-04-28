@@ -26,12 +26,33 @@ package {
   "pypy": 
     ensure => installed,
     require => Package['python'];
-  ["vim", "curl"]:
+  "curl":
+    ensure => installed;
+  "redis": # for example
+    provider => pip,
+    require => Exec['pypy pip'],
+    ensure => installed;
+  "vim":
     ensure => installed;
   "git":
     ensure => installed;
+  "redis":
+    provider => pip,
+    require => Exec['pypy pip'],
+    ensure => installed;
 }
 
+exec { "distribute_setup":
+  command => "/usr/bin/curl -O http://python-distribute.org/distribute_setup.py && pypy distribute_setup.py",
+  cwd => "/home/vagrant",
+  require => Package['pypy']
+}
+
+exec {"pypy pip":
+  command => "/usr/bin/curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py && pypy get-pip.py",
+  cwd => "/home/vagrant",
+  require => Exec['distribute_setup']
+}
 
 package { "python-pip": 
   ensure => latest,
@@ -47,4 +68,5 @@ package { ["Flask", "Flask-SQLAlchemy", "Flask-WTF", "Flask-Bootstrap", "Jinja2"
   provider => pip,
   require => Package['python-pip']
 }
+
 
