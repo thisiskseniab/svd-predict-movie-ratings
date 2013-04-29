@@ -8,7 +8,7 @@ import numpy
 import copy
 import random
 
-import redis
+# import redis
 
 class Matrix:
   def __init__(self, width, height, i):
@@ -39,13 +39,13 @@ class Matrix:
           self.set(user_index, movie_index, rating)
 
 
-redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
+# redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-# vector_type is either 'user' or 'movie'
-def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
-    key = 'feature_vector:' + vector_type + ':' + feature_number
-    for index in xrange(len(feature_vector)):
-        redis_server.zadd(key, index, feature_vector[index])
+# # vector_type is either 'user' or 'movie'
+# def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
+#     key = 'feature_vector:' + vector_type + ':' + feature_number
+#     for index in xrange(len(feature_vector)):
+#         redis_server.zadd(key, index, feature_vector[index])
 
 # deliver a user's predicted ratings from all feature vectors in redis
 # get predictions for a user from redis?
@@ -187,29 +187,29 @@ uFs, mFs = train_some_features(test_matrix, 40)
 
 
 
-#savetxt('output_large_matrix.txt', uFs, mFs) #save to txt
-#savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
+# #savetxt('output_large_matrix.txt', uFs, mFs) #save to txt
+# #savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
 
-#if want to write or print results 1-by-1
+# #if want to write or print results 1-by-1
 
-file = open('output_matrix.txt', 'w')
+# file = open('output_matrix.txt', 'w')
 
-file.write('\noriginal matrix' + '\n' + str(test_matrix))
-for singular in range(len(uFs)):
-  # print 'user feature vector '+ str(singular), uFs[singular]
-  # print 'movie feature vector '+ str(singular), mFs[singular]
-  singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
-  # print singular, singular_value
-  file.write('\n'+ str(singular))
-  file.write('\nuser feature vector ' + '\n' + str(uFs[singular]))
-  file.write('\nmovie feature vector '+ '\n' + str(mFs[singular]))
-  file.write('\nsingular value ' + '\n' + str(singular_value))
-  file.write('\n')
-  # diff = test_matrix.minus(singular_value).mean()
-  # file.write('\ndifference' + str(diff))
-  # print 'difference', diff
+# file.write('\noriginal matrix' + '\n' + str(test_matrix))
+# for singular in range(len(uFs)):
+#   # print 'user feature vector '+ str(singular), uFs[singular]
+#   # print 'movie feature vector '+ str(singular), mFs[singular]
+#   singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
+#   # print singular, singular_value
+#   file.write('\n'+ str(singular))
+#   file.write('\nuser feature vector ' + '\n' + str(uFs[singular]))
+#   file.write('\nmovie feature vector '+ '\n' + str(mFs[singular]))
+#   file.write('\nsingular value ' + '\n' + str(singular_value))
+#   file.write('\n')
+#   # diff = test_matrix.minus(singular_value).mean()
+#   # file.write('\ndifference' + str(diff))
+#   # print 'difference', diff
 
-file.close()
+# file.close()
 
 #minimized function calls
 #had sigma that was unnecessary (?)
