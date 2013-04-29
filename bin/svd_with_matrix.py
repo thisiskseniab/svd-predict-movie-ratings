@@ -85,13 +85,23 @@ def get_another_test_matrix():
   t.matrix = numpy.array(threes) # cheating!
   return t
 
-def unpack_matrix_from_text_file():
-  matrix = genfromtxt('test_matrix.txt', unpack=True)
-  return matrix
+def set_matrix_with_real_data():
+    with open('../data/ml-10M100K/user_id_to_index.json', 'r') as user_file:
+        user_index = json.load(user_file)
 
-def unpack_matrix_from_npy_file():
-  matrix = numpy.load('outfile.npy')
-  return matrix
+    with open('../data/ml-10M100K/movie_id_to_index.json', 'r') as movie_file:
+        movie_index = json.load(movie_file)
+
+    user_count = 69878
+    movie_count = 10681
+    ratings_matrix = Matrix(user_count, movie_count, 0) #69878, 10681
+    ratings_file = open('../data/ml-10M100K/ratings.dat')
+    for line in ratings_file:
+        user_id = line.split('::')[0]
+        movie_id = line.split('::')[1]
+        rating =  line.split('::')[2]
+        ratings_matrix.set(user_index[user_id], movie_index[movie_id], rating)
+    return ratings_matrix
 # users are width movies are height
 # this means movies are columns
 
@@ -167,7 +177,7 @@ def train_some_features(real, feature_count):
 
 
 #test_matrix = get_test_matrix()
-test_matrix = load_original_values_from_redis()
+test_matrix = set_matrix_with_real_data()
 
 uFs, mFs = train_some_features(test_matrix, 40)
 
