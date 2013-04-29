@@ -28,10 +28,6 @@ package {
     require => Package['python'];
   "curl":
     ensure => installed;
-  "redis": # for example
-    provider => pip,
-    require => Exec['pypy pip'],
-    ensure => installed;
   "vim":
     ensure => installed;
   "git":
