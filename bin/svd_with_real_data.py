@@ -8,44 +8,54 @@ import numpy
 import copy
 import random
 
-# import redis
+import redis
+import json
 
 class Matrix:
-  def __init__(self, width, height, i):
-    self.width = width
-    self.height = height
-    self.matrix = numpy.zeros([width, height], dtype='float32')
-    self.matrix.fill(i)
-  def index(self, w, h):
-    return self.matrix[w][h]
-  def set(self, w, h, value):
-    self.matrix[w, h] = value
-  def minus(self, other):
-    result = Matrix(self.width, self.height, 0)
-    result.matrix = self.matrix - other.matrix
-    return result
-  def times(self, coefficient):
-    self.matrix = self.matrix * coefficient
-  def __str__(self):
-    return self.matrix.__str__()
-  def mean(self):
-    return self.matrix.mean()
-  # this method seems pretty slow
-  def load_from_redis(self):
-    for user_index in xrange(self.width):
-      for movie_index in xrange(self.height):
-        rating = redis_server.get(user_movie_key(user_index, movie_index))
-        if rating > 0:
-          self.set(user_index, movie_index, rating)
+    def __init__(self, width, height, i):
+        self.width = width
+        self.height = height
+        self.matrix = numpy.zeros([width, height], dtype='float32')
+        self.matrix.fill(i)
+    def index(self, w, h):
+        return self.matrix[w][h]
+    def set(self, w, h, value):
+        self.matrix[w, h] = value
+    def minus(self, other):
+        result = Matrix(self.width, self.height, 0)
+        result.matrix = self.matrix - other.matrix
+        return result
+    def times(self, coefficient):
+        self.matrix = self.matrix * coefficient
+    def __str__(self):
+        return self.matrix.__str__()
+    def mean(self):
+        return self.matrix.mean()
+    # this method seems really slow
+    def load_from_redis(self):
+        for user_index in xrange(self.width):
+          for movie_index in xrange(self.height):
+            rating = redis_server.get(user_movie_key(user_index, movie_index))
+            if rating > 0:
+              self.set(user_index, movie_index, rating)
+
+class UnrealizedMatrix:
+    def __init__(self):
+        pass
+    def getUnrealMatrix(self, featurevector1, featurevector2):
+        self.featurevector1 = featurevector1
+        self.featurevector2 = featurevector2 
+    def index(self, user_index, movie_index):
+        return self.featurevector1[user_index] * self.featurevector2[movie_index]
 
 
-# redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
+redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 # # vector_type is either 'user' or 'movie'
-# def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
-#     key = 'feature_vector:' + vector_type + ':' + feature_number
-#     for index in xrange(len(feature_vector)):
-#         redis_server.zadd(key, index, feature_vector[index])
+def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
+    key = 'feature_vector:' + vector_type + ':' + feature_number
+    for index in xrange(len(feature_vector)):
+        redis_server.zadd(key, index, feature_vector[index])
 
 # deliver a user's predicted ratings from all feature vectors in redis
 # get predictions for a user from redis?
@@ -59,32 +69,36 @@ def get_user_predicted_values(user_index):
         for movie_index in xrange(len(movie_feature_vector)):
             user_predictions[movie_index] += user_feature_value * movie_feature_vector[movie_index]
 
+#get predicted ratings from redis vectors
+def get_user_predicted_ratings(user_index):
+    pass
 
 # loads a matrix from redis
 def load_original_values_from_redis():
-  user_count = 69878
-  movie_count = 10681
-  ratings_matrix = Matrix(user_count, movie_count, 0) #69878, 10681
-  ratings_matrix.load_from_redis()
-  return ratings_matrix
+    user_count = 69878
+    movie_count = 10681
+    ratings_matrix = Matrix(user_count, movie_count, 0) #69878, 10681
+    ratings_matrix.load_from_redis()
+    return ratings_matrix
 
 
 def get_test_matrix():
-  t = Matrix(100, 50, 0) #71567, 10681 139
-  for x in range(t.width):
-    for y in range(t.height):
-      t.set(x, y, 3) #random.randrange(1, 5, 1))
-  #t.values = [1,2,3,4,5] * 1000 #200010
-  return t
+    t = Matrix(100, 50, 0) #71567, 10681 139
+    for x in range(t.width):
+        for y in range(t.height):
+            t.set(x, y, 3) #random.randrange(1, 5, 1))
+    #t.values = [1,2,3,4,5] * 1000 #200010
+    return t
 
 def get_another_test_matrix():
-  nmp = [[ 1., 5., 2., 5., 4.], [ 0., 3., 5., 4., 2.], [ 1., 5., 3., 3., 1.], [ 2., 3., 4., 4., 2.]]
-  b = [[ 2.,  4.,  1.,  1.,  3.], [ 1.,  2.,  1.,  1.,  2.], [ 3.,  4.,  2.,  1.,  3.], [ 1.,  2.,  1.,  3.,  2.]]
-  threes = [[ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.]]
-  t = Matrix(4, 5, 0)
-  t.matrix = numpy.array(threes) # cheating!
-  return t
+    nmp = [[ 1., 5., 2., 5., 4.], [ 0., 3., 5., 4., 2.], [ 1., 5., 3., 3., 1.], [ 2., 3., 4., 4., 2.]]
+    b = [[ 2.,  4.,  1.,  1.,  3.], [ 1.,  2.,  1.,  1.,  2.], [ 3.,  4.,  2.,  1.,  3.], [ 1.,  2.,  1.,  3.,  2.]]
+    threes = [[ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.], [ 3., 3., 3., 3., 3.]]
+    t = Matrix(4, 5, 0)
+    t.matrix = numpy.array(threes) # cheating!
+    return t
 
+#sets a matrix with real data from original file
 def set_matrix_with_real_data():
     with open('../data/ml-10M100K/user_id_to_index.json', 'r') as user_file:
         user_index = json.load(user_file)
@@ -126,10 +140,11 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 600
+    max_cycles = 400
     uF, mF = init_feature_vectors(real.width, real.height)
     while True:
         cycles += 1
+        print 'cycles of training one vector', cycles
         predicted = multiply_feature_vectors(uF, mF)
         if cycles == max_cycles: #errors.mean() < sigma or
             break
@@ -162,11 +177,11 @@ def train_some_features(real, feature_count):
 
         remainder = remainder.minus(singular_value)
         # sigma /= 4
-        if abs(remainder.mean() - last_difference) < 0.01 and iteration >= 2:
+        if abs(remainder.mean() - last_difference) < 0.01: # and iteration >= 2:
             break
         last_difference = remainder.mean()
         iteration += 1
-        # print iteration
+        print "trained vector #", iteration
         # use if have sigma
         # if (real.mean() - remainder.mean()) < 0.8:
         # break
@@ -174,16 +189,18 @@ def train_some_features(real, feature_count):
 
 
 # test_matrix = get_test_matrix()
+print "setting matrix"
 test_matrix = set_matrix_with_real_data()
 
-uFs, mFs = train_some_features(test_matrix, 40)
+print "doing svd"
+uFs, mFs = train_some_features(test_matrix, 2)
 
+print "loading to redis"
+for vector_index in xrange(len(uFs)):   
+  write_feature_vector_to_redis('user', uFs[vector_index], vector_index)
 
-# for vector_index in xrange(len(uFs)):
-  # write_feature_vector_to_redis('user', uFs[vector_index], vector_index)
-
-# for vector_index in xrange(len(mFs)):
-  # write_feature_vector_to_redis('movie', mFs[vector_index], vector_index)
+for vector_index in xrange(len(mFs)):
+  write_feature_vector_to_redis('movie', mFs[vector_index], vector_index)
 
 
 
@@ -191,7 +208,7 @@ uFs, mFs = train_some_features(test_matrix, 40)
 # #savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
 
 # #if want to write or print results 1-by-1
-
+# print "writing vectors to a txt file"
 # file = open('output_matrix.txt', 'w')
 
 # file.write('\noriginal matrix' + '\n' + str(test_matrix))

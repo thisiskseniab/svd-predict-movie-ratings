@@ -1,12 +1,18 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import sessionmaker
-
-ENGINE = None
-Session = None
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 Base = declarative_base()
+global ENGINE
+global session
+
+ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+# session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
+# Base.query = session.query_property()
+
+
+
 
 ### Class declarations go here
 
@@ -14,30 +20,28 @@ class User(Base):
 	__tablename__ = "users"
 
 	id = Column(Integer, primary_key = True)
-	index = Column(Integer)
+	indx = Column(Integer)
 	email = Column(String(64), nullable=True)
 	password = Column(String(64), nullable=True)
-	age = Column(Integer, nullable=True)
-	zipcode = Column(String(15), nullable=True)
+	name = Column(String(64), nullable=True)
 
-	def __init__(self, index, email = None, password = None, age = None, zipcode = None):
-		self.index = int(index)
+	def __init__(self, indx, email = None, password = None, name = None):
+		self.indx = indx
 		self.email = email
 		self.password = password
-		self.age = age
-		self.zipcode = zipcode
+		self.name = name
 
 
 class Movie(Base):
 	__tablename__ = "movies"
 
 	id = Column(Integer, primary_key = True)
-	index = Column(Integer)
-	title = Column(String(64))
-	genre = Column(String(256))
+	indx = Column(Integer)
+	title = Column(String(128))
+	genre = Column(String(128))
 
-	def __init__(self, index, title, genre):
-		self.index = int(index)
+	def __init__(self, indx, title, genre):
+		self.indx = indx
 		self.title = title
 		self.genre = genre
 
@@ -77,13 +81,20 @@ class Tag(Base):
 ### End class declarations
 
 def connect():
-	global ENGINE
-	global Session
+	engine = create_engine("sqlite:///ratings.db", echo=False)
+	session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False))
 
-	ENGINE = create_engine("sqlite:///data/ratings.db") #, echo=True)
-	Session = sessionmaker(bind=ENGINE)
 
-	return Session()
+	Base = declarative_base()
+	Base.query = session.query_property()
+	# global ENGINE
+	# global Session
+
+	# ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+	# Session = scoped_session(sessionmaker(bind=Engine, autocommit = False, autoflush = False))
+	# Base.query = Session.query_property()
+
+	return session()
 
 def main():
     """In case we need this for something"""

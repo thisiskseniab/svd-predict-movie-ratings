@@ -4,9 +4,10 @@
 class UnrealizedMatrix:
 	def __init__(self):
 		pass
-	def getUnrealMatrix(self, fv1, fv2):
-		self.fv1 = fv1
-		self.fv2 = fv2
-	def index(self, w, h):
-		return self.fv1 * self.fv2
+	def getUnrealMatrix(self, featurevector1, featurevector2):
+		self.featurevector1 = featurevector1
+		self.featurevector2 = featurevector2
+	#should I use ids or indexes?	
+	def index(self, user_index, movie_index):
+		return self.featurevector1[user_index] * self.featurevector2[movie_index]
 

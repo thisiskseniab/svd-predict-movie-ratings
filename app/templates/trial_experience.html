@@ -2,35 +2,132 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block body_content %}
-<div class="container">
-    <h2>Log in</h2>
-    <div id="login">
-        <form action="{{url_for("login")}}" method="POST">
-            <div>
-                <label for="email">Email</label>
-                <input type="text" name="email">
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" name="password">
-            </div>
-            <input type="submit">
-        </form>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">SVD Predict Ratings</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#users">Users</a></li>
+              <li><a href="#data">Data</a></li>
+              <li><a href="#graphs">Graphs</a></li>
+              <li><a href="/trial_experience">Trial Experience</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
     </div>
 
-    <h2>Register account</h2>
-    <div id="new-user">
-        <form action="{{url_for("register")}}" method="POST">
-            <div>
-                <label for="email">Email</label>
-                <input type="text" name="email">
+<div class="container">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="span6">
+                        <div class="area">
+                            <div id="login">
+                                <form class="form-horizontal" action="{{url_for("login")}}" method="POST">
+                                    <div class="heading">
+                                        <h4 class="form-heading">Sign In</h4>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <div class="controls">
+                                            <input type="text" name="email" id="inputUsername" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="password">Password</label>
+                                        <div class="controls">
+                                            <input type="password" name="password" id="inputPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <button type="submit" class="btn btn-success">Sign In</button>
+                                        </div>
+                                    </div> 
+                                </form> 
+                            </div> 
+                        </div>                           
+                    </div>
+                    <div class="span6">
+                        <div class="area">
+                            <div id="new-user">
+                                <form class="form-horizontal" action="{{url_for("register")}}" method="POST">
+                                    <div class="heading">
+                                        <h4 class="form-heading">Sign Up</h4>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name">Your Name</label>
+                                        <div class="controls">
+                                            <input type="text" name="name" id="inputName" placeholder="Name">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <div class="controls">
+                                            <input type="text" name="email" id="inputEmail" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="password">Password</label>
+                                        <div class="controls">
+                                            <input type="password" name="password" id="inputPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <button type="submit" class="btn btn-success">Sign Up</button>
+                                        </div>
+                                    </div> 
+                                </form> 
+                            </div>
+                        </div>                            
+                    </div>
+                </div>
+                
             </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" name="password">
+        </div><!-- container -->
+<!--
+    <div class="container">
+        <div class="content">
+          <div class="row">
+            <div class="login-form">
+              <h2>Login</h2>
+              <form action="{{url_for("login")}}" method="POST">
+                <fieldset>
+                  <div class="clearfix">
+                    <input type="text" placeholder="email">
+                  </div>
+                  <div class="clearfix">
+                    <input type="password" placeholder="password">
+                  </div>
+                  <button class="btn primary" type="submit">Sign in</button>
+                </fieldset>
+              </form>
             </div>
-            <input type="submit">
-        </form>
-    </div>
-</div>
+          </div>
+        </div>
+
+        <h2>Register account</h2>
+        <div id="new-user">
+            <form action="{{url_for("register")}}" method="POST">
+                <div>
+                    <label for="email">Email</label>
+                    <input type="text" name="email">
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password">
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+    </div>  container -->
 {% endblock %}
