@@ -88,6 +88,7 @@ def get_user_predicted_ratings(user_index):
         movie_feature_vector = redis_server.zrangebyscore('feature_vector:movie:' + feature_index, 0, 'inf')
 
 def predict_rating(user, userFeature, movieFeature):
+    pass
 
 
 # loads a matrix from redis
