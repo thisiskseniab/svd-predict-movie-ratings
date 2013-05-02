@@ -44,18 +44,19 @@ def load_ratings(session):
     # user id :: movie id :: rating :: time
     # do index conversion
     i = 0
-    with open("../data/ml-10M100K/ratings.dat") as datafile:
-        for line in datafile:
-            line = line.split('::')
-            rating = model.Rating(user_id_to_index[line[0]], movie_id_to_index[line[1]], line[2], line[3])
-            session.add(rating)
-            print "loaded rating", i
-            i += 1
+    datafile = open("../data/ml-10M100K/ratings.dat", "r")
+    for line in datafile:
+        line = line.split('::')
+        rating = model.Rating(user_id_to_index[line[0]], movie_id_to_index[line[1]], line[2], line[3])
+        session.add(rating)
+        print "loaded rating", i
+        i += 1
         session.commit()
+        print "commited rating", i
+    datafile.close()
 
 # use pypy to seed database (much faster), do it 1-by-1 to make sure everything loads
 def main(session):
-    # You'll call each of the load_* functions with the session as an argument
     # print "Loading users"
     # load_users(session)
     # print "Loading movies"

@@ -6,10 +6,9 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 Base = declarative_base()
 global ENGINE
 global session
-
 ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-# session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
-# Base.query = session.query_property()
+session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
+Base.query = session.query_property()
 
 
 
@@ -50,14 +49,14 @@ class Rating(Base):
 	__tablename__ = "ratings"
 
 	id = Column(Integer, primary_key = True)
-	user_id = Column(Integer)
-	movie_id = Column(Integer)
+	user_indx = Column(Integer)
+	movie_indx = Column(Integer)
 	rating = Column(Integer)
 	timestamp = Column(Integer)
 
-	def __init__(self, user_id, movie_id, rating, timestamp):
-		self.user_id = user_id
-		self.movie_id = movie_id
+	def __init__(self, user_indx, movie_indx, rating, timestamp):
+		self.user_indx = user_indx
+		self.movie_indx = movie_indx
 		self.rating = rating
 		self.timestamp = timestamp
 
@@ -66,14 +65,14 @@ class Tag(Base):
 	__tablename__ = "tags"
 
 	id = Column(Integer, primary_key = True)
-	user_id = Column(Integer)
-	movie_id = Column(Integer)
+	user_indx = Column(Integer)
+	movie_indx = Column(Integer)
 	tag = Column(String(256))
 	timestamp = Column(Integer)
 
-	def __init__(self, user_id, movie_id, tag, timestamp):
-		self.user_id = user_id
-		self.movie_id = movie_id
+	def __init__(self, user_indx, movie_indx, tag, timestamp):
+		self.user_indx = user_indx
+		self.movie_indx = movie_indx
 		self.tag = tag
 		self.timestamp = timestamp
 
@@ -81,18 +80,14 @@ class Tag(Base):
 ### End class declarations
 
 def connect():
+	#use this for seeding the db
 	engine = create_engine("sqlite:///ratings.db", echo=False)
 	session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False))
 
 
 	Base = declarative_base()
 	Base.query = session.query_property()
-	# global ENGINE
-	# global Session
-
-	# ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-	# Session = scoped_session(sessionmaker(bind=Engine, autocommit = False, autoflush = False))
-	# Base.query = Session.query_property()
+	
 
 	return session()
 

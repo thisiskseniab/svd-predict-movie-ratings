@@ -2,19 +2,69 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block body %}
-<h2>Search Results</h2>
-<ul>
-{% for movie in movies %}
-<li><div>
-    <a href="{{url_for("view_movie", indx=movie.indx)}}">{{movie.title }}</a>
-</div></li>
-{% else %}
-<li>No results :(</li>
-{% endfor %}
-</ul>
-<h2>Search Again</h2>
-<form action="{{url_for("search")}}" method="POST">
-    <input type="text" name="query">
-    <input type="submit">
-</form>
+    <div class="navbar navbar-fixed-top">
+      	<div class="navbar-inner">
+	        <div class="container">
+	          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </a>
+	          <a class="brand" href="/">SVD Predict Ratings</a>
+	          	<div class="nav-collapse">
+		            <ul class="nav">
+		              <li><a href="/">Home</a></li>
+		              <li><a href="/about">About</a></li>
+		              <li><a href="/users">Users</a></li>
+		              <li><a href="/data">Data</a></li>
+		              <li><a href="/graphs">Graphs</a></li>
+		              <li class="active"><a href="/trial_experience">Trial Experience</a></li>
+		            </ul>
+	          	</div><!--/.nav-collapse -->
+	        </div>
+      	</div>
+    </div>
+    	<div class="wrapper">
+	      	<form class="search pull-left" action="{{url_for("search")}}" method="POST">
+	  			<input type="text" name="query" style="margin-left:50px;" class="search-query" placeholder="Search For Movies">
+	  			<input type="submit">
+			</form>
+			<div class="container" style="padding-right:20px;">
+  				<ul class="nav pull-right">
+  					<li><a href="/profile">Your profile</a></li>
+    				<li><a href="/logout">Logout</a></li>
+  				</ul>
+    		</div>
+		</div>
+    <div class="container">
+    	<div class="hero-unit">
+        	<h2>Search Results</h2>
+			<ul>
+				{% for movie in movies %}
+				<li><div>
+				    <a href="{{url_for("view_movie", indx=movie.indx)}}">{{movie.title }}</a>
+					</div></li>
+				{% else %}
+				<li>No results :(</li>
+				{% endfor %}
+			</ul>
+    	</div>
+      <!-- Example row of columns -->
+      	<div class="row">
+	        <div class="span4">
+	          <h2>Rate more movies</h2>
+			
+	        </div>
+	        <div class="span4">
+	        	<h2>Your ratings</h2>
+				
+	        </div>
+	        <div class="span4">
+	          <h2>Recommended Movies</h2>
+	          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+	          <p><a class="btn" href="#">View details &raquo;</a></p>
+	        </div>
+	    </div> <!-- row -->
+    </div>
+
 {% endblock %}

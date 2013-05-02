@@ -2,6 +2,101 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block body %}
+<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">SVD Predict Ratings</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/users">Users</a></li>
+              <li><a href="/data">Data</a></li>
+              <li><a href="/graphs">Graphs</a></li>
+              <li class="active"><a href="/trial_experience">Trial Experience</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action
+      <div class="hero-unit">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+      </div> -->
+		<div class="wrapper">
+	      	<form class="search pull-left" action="{{url_for("search")}}" method="POST">
+	  			<input type="text" name="query" style="margin-left:50px;" class="search-query" placeholder="Search For Movies">
+	  			<input type="submit">
+			</form>
+			<div class="container" style="padding-right:20px;">
+  				<ul class="nav pull-right">
+  					<li><a href="/profile">Your profile</a></li>
+    				<li><a href="/logout">Logout</a></li>
+  				</ul>
+    		</div>
+		</div>
+		<div class="hero-unit">
+			<h2>{{movie.title}}</h2>
+			<h3> Average rating: {{ "%.2f"%average }}</h3>
+
+			{% if user_rating %}
+			<h3>Your rating: {{ user_rating.rating }}</h3>
+			{% elif prediction %}
+			<h3>Our prediction for you: {{ prediction }}</h3>
+			{% endif %}
+			<h2>Rate this movie</h2>
+			<form action="{{url_for('rate_movie', indx=movie.indx)}}" method="post">
+			    <select name="rating">
+			        <option value="0">0</option>
+			        <option value="1">1</option>
+			        <option value="2">2</option>
+			        <option value="3">3</option>
+			        <option value="4">4</option>
+			        <option value="5">5</option>
+			    </select>
+			 	<input type="submit">
+			</form>
+    	</div>
+      <!-- Example row of columns -->
+      	<div class="row">
+	        <div class="span4">
+	          <h2>Rate more movies</h2>
+				<ul>
+				    {% for movie in movies %}
+				    <li><a href="{{url_for("rate_movies", id=rating.movie_indx)}}">{{rating.movie.title}} &mdash; {{rating.rating}}</a></li>
+				    {% else %}
+				    <li>You haven't rated anything!</li>
+				    {% endfor %}
+				</ul>
+	        </div>
+	        <div class="span4">
+	        	<h2>Your ratings</h2>
+				<ul>
+				    {% for rating in ratings %}
+				    <li><a href="{{url_for("view_movie", id=rating.movie_indx)}}">{{rating.movie.title}} &mdash; {{rating.rating}}</a></li>
+				    {% else %}
+				    <li>You haven't rated anything!</li>
+				    {% endfor %}
+				</ul>
+	        </div>
+	        <div class="span4">
+	          <h2>Recommended Movies</h2>
+	          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+	          <p><a class="btn" href="#">View details &raquo;</a></p>
+	        </div>
+	    </div> <!-- row -->
+    </div> <!-- container -->
+
+
+
 <h2>{{movie.title}} &mdash; {{movie.released_on.year}}</h2>
 <h3> Average rating: {{ "%.2f"%average }}</h3>
 

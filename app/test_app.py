@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 # heroku = Heroku(app)
-# SECRET_KEY = "fish"
+# SECRET_KEY = "fish"z
 app.config.from_object(__name__)
 
 @app.teardown_request
@@ -23,10 +23,26 @@ def load_user_id():
 def main_page():
 	return render_template('index.html')
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
+@app.route("/users")
+def users():
+    return render_template('users.html')
+
+@app.route("/data")
+def data():
+    return render_template('data.html')
+
+@app.route("/graphs")
+def graphs():
+    return render_template('graphs.html')
+
 @app.route("/trial_experience")
 def trial_experience():
     if g.user_id:
-        return redirect(url_for("display_search"))
+        return redirect(url_for("display_profile"))
     return render_template("trial_experience.html")
 
 
@@ -42,7 +58,7 @@ def login():
         return redirect(url_for("trial_experience"))
 
     session['user_indx'] = user.indx
-    return redirect(url_for("display_search"))
+    return redirect(url_for("display_profile"))
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -59,11 +75,15 @@ def register():
     db_session.commit()
     db_session.refresh(u)
     session['user_indx'] = u.indx 
-    return redirect(url_for("display_search"))
+    return redirect(url_for("display_profile"))
+
+@app.route("/profile", methods=["GET"])
+def display_profile():
+    return render_template("profile.html")
 
 @app.route("/search", methods=["GET"])
-def display_search():
-    return render_template("search.html")
+def display_profile():
+    return render_template("profile.html")
 
 @app.route("/search", methods=["POST"])
 def search():
@@ -125,7 +145,7 @@ def my_ratings():
 
 @app.route("/logout")
 def logout():
-    del session['user_id']
+    del session['user_indx']
     return redirect(url_for("trial_experience"))
 
 app.secret_key = '\xd0u\xf2g\xbc\xc5\x07e\xc6wz\x03\x05\xe2\xcd[d\xac\xd0\xe4\x8e\xe2\xb6\x82'
