@@ -8,7 +8,6 @@ import numpy
 import copy
 import random
 
-import redis
 import json
 
 class Matrix:
@@ -40,16 +39,24 @@ class Matrix:
               self.set(user_index, movie_index, rating)
 
 class UnrealizedMatrix:
-    def __init__(self):
-        pass
-    def getUnrealMatrix(self, featurevector1, featurevector2):
+    # def __init__(self):
+    #     pass
+    def __init__(self, featurevector1, featurevector2):
         self.featurevector1 = featurevector1
         self.featurevector2 = featurevector2 
-    def index(self, user_index, movie_index):
+    def index_multiply(self, user_index, movie_index):
         return self.featurevector1[user_index] * self.featurevector2[movie_index]
 
+    def index_minus(self, user_index, movie_index, real):
+        result = (self.featurevector1[user_index] * self.featurevector2[movie_index]) - real.index(user_index, movie_index)
+        return result
 
-redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
+    def index_times(self, user_index, movie_index, coefficient):
+        result = self.featurevector1[user_index] * self.featurevector2[movie_index] * coefficient
+        return result
+        
+
+# redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 # # vector_type is either 'user' or 'movie'
 def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
@@ -58,7 +65,7 @@ def write_feature_vector_to_redis(vector_type, feature_number, feature_vector):
         redis_server.zadd(key, index, feature_vector[index])
 
 # deliver a user's predicted ratings from all feature vectors in redis
-# get predictions for a user from redis?
+# get predictions for a user from redis
 def get_user_predicted_values(user_index):
     user_predictions = {} # movie_index -> rating
     user_predictions.set_default(0)
@@ -67,11 +74,21 @@ def get_user_predicted_values(user_index):
         user_feature_value = redis_server.zrangebyscore('feature_vector:user:' + feature_index, user_index, user_index)
         movie_feature_vector = redis_server.zrangebyscore('feature_vector:movie:' + feature_index, 0, 'inf')
         for movie_index in xrange(len(movie_feature_vector)):
-            user_predictions[movie_index] += user_feature_value * movie_feature_vector[movie_index]
+            prediction_matrix = getUnrealMatrix(user_feature_value, movie_feature_vector)
+            prediction = prediction_matrix.index(user_index, movie_index)
+    return prediction
 
 #get predicted ratings from redis vectors
 def get_user_predicted_ratings(user_index):
-    pass
+    user_predictions = {} # movie_index -> rating
+    user_predictions.set_default(0)
+    movie_feature_vector_keys = redis_server.keys('feature_vector:movie:*')
+    for feature_index in xrange(len(movie_feature_vector_keys)):
+        user_feature_value = redis_server.zrangebyscore('feature_vector:user:' + feature_index, user_index, user_index)
+        movie_feature_vector = redis_server.zrangebyscore('feature_vector:movie:' + feature_index, 0, 'inf')
+
+def predict_rating(user, userFeature, movieFeature):
+
 
 # loads a matrix from redis
 def load_original_values_from_redis():
@@ -122,9 +139,12 @@ lrate = 0.001
 
 # was get_error_matrix
 def multiply_feature_vectors(userFeature, movieFeature):
+    print "setting a matrix of new feature vectors"
     result = Matrix(len(userFeature), len(movieFeature), 0)
-    for w in range(result.width):
-        for h in range(result.height):
+    print "looping through the lenght of both vectors"
+    for w in xrange(result.width):
+        for h in xrange(result.height):
+            print "multiplying vectors at point", w, h
             result.set(w, h, userFeature[w] * movieFeature[h])
     return result
 
@@ -141,21 +161,29 @@ def init_feature_vectors(width, height):
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
     max_cycles = 400
+    print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     while True:
         cycles += 1
         print 'cycles of training one vector', cycles
-        predicted = multiply_feature_vectors(uF, mF)
         if cycles == max_cycles: #errors.mean() < sigma or
             break
         else:
-            for w in range(real.width):
-                for h in range(real.height):
+            # WHY DOES THIS LOOP TAKE FOREVER? 
+            # 68878 * 10680 * 8 operations = ~5 billion operations My processon - 2.8 Ghz ~ 2.8 billion operations per second
+            for w in xrange(real.width): #69878
+                for h in xrange(real.height): #10681
                 #I thought that error has to be an absolute value, but it was throwing the results off
                 #increasing the vectors all the time instead of correcting values of vectors
-                    error = (real.index(w, h) - predicted.index(w, h)) * lrate
+                    print "calculating prediction for this position", w, h, cycles
+                    predicted_w_h = uF[w] * mF[h] #don't need to set up the whole matrix here, just do it on the spot
+                    print "Calculating the error for position", w, h, cycles
+                    error = (real.index(w, h) - predicted_w_h) * lrate 
+                    print "assigning user vector to itself", cycles
                     uv = uF[w]
+                    print "assigning user feature vector to sum of itself plus error times movie feature", w, cycles
                     uF[w] += error * mF[h]
+                    print "assigning movie feature vector to sum of itself plus error times original user feature", h, cycles
                     mF[h] += error * uv
     return uF, mF
 
@@ -167,64 +195,74 @@ def train_some_features(real, feature_count):
     userFeatures = []
     movieFeatures = []
     remainder = real
-    last_difference = 0
     iteration = 0
-    for i in range(feature_count):
-        uF, uM = train_one_feature(remainder)#, sigma)
+    for i in xrange(feature_count):
+        uF, uM = train_one_feature(remainder) #, sigma)
+        print "writing user vector", cycles
+        uf1 = json.dumps(uF)
+        with open('feature_vector_user.json', 'a') as f:
+            f.write(uf1)
+        print "writing movie vector", cycles
+        mf1 = json.dumps(uF)
+        with open('feature_vector_movie.json', 'a') as p:
+            p.write(mf1)
+        print "appending user features to list of vectors"
         userFeatures.append(uF)
+        print "appending movie features to list of vecors"
         movieFeatures.append(uM)
+        print "calculating singular value by multiplying feature vectors"
         singular_value = multiply_feature_vectors(uF, uM)
-
+        print "calculating ramainder (remainder minus singular_value"
         remainder = remainder.minus(singular_value)
-        # sigma /= 4
-        if abs(remainder.mean() - last_difference) < 0.01: # and iteration >= 2:
-            break
-        last_difference = remainder.mean()
-        iteration += 1
-        print "trained vector #", iteration
-        # use if have sigma
-        # if (real.mean() - remainder.mean()) < 0.8:
-        # break
+        # iteration += 1
+        # print "trained vector #", iteration
     return userFeatures, movieFeatures
+    
 
-
-# test_matrix = get_test_matrix()
+# test_matrix = get_another_test_matrix()
 print "setting matrix"
 test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 2)
 
-print "loading to redis"
-for vector_index in xrange(len(uFs)):   
-  write_feature_vector_to_redis('user', uFs[vector_index], vector_index)
 
-for vector_index in xrange(len(mFs)):
-  write_feature_vector_to_redis('movie', mFs[vector_index], vector_index)
+print "loading to json"
+print "loading user vector"
+uf = json.dumps(uFs)
+print "loading movie vector"
+mf = json.dumps(mFs)
+print "writing user vector"
+f = open('feature_vector_user_all.json', 'w')
+f.write(uf)
+f.close
+print "writing movie vector"
+p = open('feature_vector_movie_all.json', 'w')
+p.write(mf)
+p.close 
 
+# print "loading to redis"
+# for vector_index in xrange(len(uFs)):   
+#   write_feature_vector_to_redis('user', uFs[vector_index], vector_index)
 
+# for vector_index in xrange(len(mFs)):
+#   write_feature_vector_to_redis('movie', mFs[vector_index], vector_index)
 
-# #savetxt('output_large_matrix.txt', uFs, mFs) #save to txt
-# #savez('output_large_matrix.npz', uFs, mFs) #save to binary uncompressed
-
-# #if want to write or print results 1-by-1
-# print "writing vectors to a txt file"
-# file = open('output_matrix.txt', 'w')
 
 # file.write('\noriginal matrix' + '\n' + str(test_matrix))
 # for singular in range(len(uFs)):
-#   # print 'user feature vector '+ str(singular), uFs[singular]
-#   # print 'movie feature vector '+ str(singular), mFs[singular]
+#   print 'user feature vector '+ str(singular), uFs[singular]
+#   print 'movie feature vector '+ str(singular), mFs[singular]
 #   singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
-#   # print singular, singular_value
-#   file.write('\n'+ str(singular))
-#   file.write('\nuser feature vector ' + '\n' + str(uFs[singular]))
-#   file.write('\nmovie feature vector '+ '\n' + str(mFs[singular]))
-#   file.write('\nsingular value ' + '\n' + str(singular_value))
-#   file.write('\n')
-#   # diff = test_matrix.minus(singular_value).mean()
-#   # file.write('\ndifference' + str(diff))
-#   # print 'difference', diff
+#   print singular, singular_value
+  # file.write('\n'+ str(singular))
+  # file.write('\nuser feature vector ' + '\n' + str(uFs[singular]))
+  # file.write('\nmovie feature vector '+ '\n' + str(mFs[singular]))
+  # file.write('\nsingular value ' + '\n' + str(singular_value))
+  # file.write('\n')
+  # diff = test_matrix.minus(singular_value).mean()
+  # file.write('\ndifference' + str(diff))
+  # print 'difference', diff
 
 # file.close()
 
