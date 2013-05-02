@@ -171,7 +171,7 @@ def train_one_feature(real): #, sigma = 0.01):
             break
         else:
             # WHY DOES THIS LOOP TAKE FOREVER? 
-            # 68878 * 10680 * 8 operations = ~5 billion operations My processon - 2.8 Ghz ~ 2.8 billion operations per second
+            # 68878 * 10680 * 8 operations = ~5 billion operations my processor - 2.8 Ghz ~ 2.8 billion operations per second
             for w in xrange(real.width): #69878
                 for h in xrange(real.height): #10681
                 #I thought that error has to be an absolute value, but it was throwing the results off
