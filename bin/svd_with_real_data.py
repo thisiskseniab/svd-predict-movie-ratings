@@ -142,10 +142,10 @@ lrate = 0.001
 def multiply_feature_vectors(userFeature, movieFeature):
     print "setting a matrix of new feature vectors"
     result = Matrix(len(userFeature), len(movieFeature), 0)
-    print "looping through the lenght of both vectors"
+    # print "looping through the lenght of both vectors"
     for w in xrange(result.width):
         for h in xrange(result.height):
-            print "multiplying vectors at point", w, h
+            # print "multiplying vectors at point", w, h
             result.set(w, h, userFeature[w] * movieFeature[h])
     return result
 
@@ -208,22 +208,22 @@ def train_some_features(real, feature_count):
         mf1 = json.dumps(uF)
         with open('feature_vector_movie.json', 'a') as p:
             p.write(mf1)
-        print "appending user features to list of vectors"
+        # print "appending user features to list of vectors"
         userFeatures.append(uF)
-        print "appending movie features to list of vecors"
+        # print "appending movie features to list of vecors"
         movieFeatures.append(uM)
-        print "calculating singular value by multiplying feature vectors"
+        # print "calculating singular value by multiplying feature vectors"
         singular_value = multiply_feature_vectors(uF, uM)
-        print "calculating ramainder (remainder minus singular_value"
+        # print "calculating ramainder (remainder minus singular_value"
         remainder = remainder.minus(singular_value)
-        # iteration += 1
+        iteration += 1
         # print "trained vector #", iteration
     return userFeatures, movieFeatures
     
 
-# test_matrix = get_another_test_matrix()
+test_matrix = get_another_test_matrix()
 print "setting matrix"
-test_matrix = set_matrix_with_real_data()
+# test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 2)

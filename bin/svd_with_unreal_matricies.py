@@ -16,6 +16,8 @@ class Matrix:
         self.height = height
         self.matrix = numpy.zeros([width, height], dtype='float32')
         self.matrix.fill(i)
+    def __str__(self):
+        return self.matrix.__str__()
     def index(self, w, h):
         return self.matrix[w][h]
     def set(self, w, h, value):
@@ -28,6 +30,10 @@ class VectorProductMatrix:
     def __init__(self, v1, v2):
         self.v1 = v1
         self.v2 = v2
+        self.width = len(v1)
+        self.height = len(v2)
+    def __str__(self):
+        return str(get_real_matrix(self))
     def index(self, w, h):
         return self.v1[w] * self.v2[h]
     # this actually makes sense
@@ -38,9 +44,23 @@ class DifferenceMatrix:
     def __init__(self, remainder, featureMatrix):
         self.remainder = remainder
         self.featureMatrix = featureMatrix
+        self.width = remainder.width
+        self.height = remainder.height
+    def __str__(self):
+        return str(get_real_matrix(self))
     def index(self, w, h):
         return self.remainder.index(w, h) - self.featureMatrix.index(w, h)
+    def minus(self, other):
+        return DifferenceMatrix(self, other)
         
+
+def get_real_matrix(unreal):
+    result = Matrix(unreal.width, unreal.height, 0)
+    for w in xrange(unreal.width):
+        for h in xrange(unreal.height):
+            result.set(w, h, unreal.index(w, h))
+    return result
+
 
 def predict_rating(user, userFeature, movieFeature):
     pass
@@ -91,11 +111,11 @@ def set_matrix_with_real_data():
     return ratings_matrix
 
 initial = 0.9
-lrate = 0.001
+lrate = 0.01
 
 # was get_error_matrix
 def multiply_feature_vectors(userFeature, movieFeature):
-    return VectorProductMatrix(userfeature, moviefeature)
+    return VectorProductMatrix(userFeature, movieFeature)
 
 def init_feature_vectors(width, height):
     # set feature vectors to initial
@@ -109,7 +129,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 2
+    max_cycles = 10
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
@@ -150,43 +170,56 @@ def train_some_features(real, feature_count):
         uF, uM = train_one_feature(remainder) #, sigma)
         print "writing user vector", iteration
         uf1 = json.dumps(uF)
-        with open('feature_vector_user.json', 'a') as f:
+        with open('feature'+ str(i) +'_vector_user.json', 'a') as f:
             f.write(uf1)
+            f.write('\n')
         print "writing movie vector", iteration
         mf1 = json.dumps(uF)
-        with open('feature_vector_movie.json', 'a') as p:
+        with open('feature'+ str(i) +'_vector_movie.json', 'a') as p:
             p.write(mf1)
-        print "appending user features to list of vectors"
+            p.write('\n')
+        # print "appending user features to list of vectors"
         userFeatures.append(uF)
-        print "appending movie features to list of vecors"
+        # print "appending movie features to list of vecors"
         movieFeatures.append(uM)
-        print "calculating singular value by multiplying feature vectors"
+        # print "calculating singular value by multiplying feature vectors"
         singular_value = multiply_feature_vectors(uF, uM)
-        print "calculating ramainder (remainder minus singular_value"
+        # print "calculating ramainder (remainder minus singular_value"
         remainder = remainder.minus(singular_value)
-        # iteration += 1
-        # print "trained vector #", iteration
+        iteration += 1
+        print "trained vector #", iteration
     return userFeatures, movieFeatures
     
 
-# test_matrix = get_another_test_matrix()
+test_matrix = get_another_test_matrix()
 print "setting matrix"
-test_matrix = set_matrix_with_real_data()
+# test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
-uFs, mFs = train_some_features(test_matrix, 2)
+uFs, mFs = train_some_features(test_matrix, 5)
 
 
-print "loading to json"
-print "loading user vector"
-uf = json.dumps(uFs)
-print "loading movie vector"
-mf = json.dumps(mFs)
-print "writing user vector"
-f = open('feature_vector_user_all.json', 'w')
-f.write(uf)
-f.close
-print "writing movie vector"
-p = open('feature_vector_movie_all.json', 'w')
-p.write(mf)
-p.close 
+# print "loading to json"
+# print "loading user vector"
+# uf = json.dumps(uFs)
+# print "loading movie vector"
+# mf = json.dumps(mFs)
+# print "writing user vector"
+# f = open('feature_vector_user_all.json', 'w')
+# f.write(uf)
+# f.close
+# print "writing movie vector"
+# p = open('feature_vector_movie_all.json', 'w')
+# p.write(mf)
+# p.close 
+
+for singular in range(len(uFs)):
+  print 'user feature vector '+ str(singular), uFs[singular]
+  print 'movie feature vector '+ str(singular), mFs[singular]
+  singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
+  print singular, singular_value
+
+
+
+
+
