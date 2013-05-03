@@ -219,9 +219,9 @@ def train_some_features(real, feature_count):
     return userFeatures, movieFeatures
     
 
-test_matrix = get_another_test_matrix()
+# test_matrix = get_another_test_matrix()
 print "setting matrix"
-# test_matrix = set_matrix_with_real_data()
+test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 2)
