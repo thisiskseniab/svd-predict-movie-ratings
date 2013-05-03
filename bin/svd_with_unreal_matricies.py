@@ -110,7 +110,7 @@ def set_matrix_with_real_data():
         ratings_matrix.set(user_index[user_id], movie_index[movie_id], rating)
     return ratings_matrix
 
-initial = 0.9
+initial = 0.3
 lrate = 0.01
 
 # was get_error_matrix
@@ -129,7 +129,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 10
+    max_cycles = 25
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
@@ -153,8 +153,7 @@ def train_one_feature(real): #, sigma = 0.01):
                     error = (real.index(w, h) - predicted_w_h) * lrate 
                     uv = uF[w]
                     uF[w] += error * mF[h]
-                    mF[h] += error * uv
-                
+                    mF[h] += error * uv         
     return uF, mF
 
 
@@ -199,19 +198,19 @@ print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 5)
 
 
-# print "loading to json"
-# print "loading user vector"
-# uf = json.dumps(uFs)
-# print "loading movie vector"
-# mf = json.dumps(mFs)
-# print "writing user vector"
-# f = open('feature_vector_user_all.json', 'w')
-# f.write(uf)
-# f.close
-# print "writing movie vector"
-# p = open('feature_vector_movie_all.json', 'w')
-# p.write(mf)
-# p.close 
+print "loading to json"
+print "loading user vector"
+uf = json.dumps(uFs)
+print "loading movie vector"
+mf = json.dumps(mFs)
+print "writing user vector"
+f = open('feature_vector_user_all.json', 'w')
+f.write(uf)
+f.close
+print "writing movie vector"
+p = open('feature_vector_movie_all.json', 'w')
+p.write(mf)
+p.close 
 
 # for singular in range(len(uFs)):
 #   print 'user feature vector '+ str(singular), uFs[singular]
