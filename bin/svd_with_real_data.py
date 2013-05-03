@@ -135,7 +135,7 @@ def set_matrix_with_real_data():
         ratings_matrix.set(user_index[user_id], movie_index[movie_id], rating)
     return ratings_matrix
 
-initial = 0.1
+initial = 0.9
 lrate = 0.001
 
 # was get_error_matrix
@@ -161,7 +161,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 400
+    max_cycles = 2
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
@@ -200,11 +200,11 @@ def train_some_features(real, feature_count):
     iteration = 0
     for i in xrange(feature_count):
         uF, uM = train_one_feature(remainder) #, sigma)
-        print "writing user vector", cycles
+        print "writing user vector", iteration
         uf1 = json.dumps(uF)
         with open('feature_vector_user.json', 'a') as f:
             f.write(uf1)
-        print "writing movie vector", cycles
+        print "writing movie vector", iteration
         mf1 = json.dumps(uF)
         with open('feature_vector_movie.json', 'a') as p:
             p.write(mf1)
