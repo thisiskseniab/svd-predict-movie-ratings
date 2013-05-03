@@ -172,20 +172,19 @@ def train_one_feature(real): #, sigma = 0.01):
         else:
             # WHY DOES THIS LOOP TAKE FOREVER? 
             # 68878 * 10680 * 8 operations = ~5 billion operations my processor - 2.8 Ghz ~ 2.8 billion operations per second
+            j = 0
             for w in xrange(real.width): #69878
+                if w % 1000 == 0:
+                    print 'users w, movies h, cycles', w, h, cycles
                 for h in xrange(real.height): #10681
                 #I thought that error has to be an absolute value, but it was throwing the results off
                 #increasing the vectors all the time instead of correcting values of vectors
-                    print "calculating prediction for this position", w, h, cycles
                     predicted_w_h = uF[w] * mF[h] #don't need to set up the whole matrix here, just do it on the spot
-                    print "Calculating the error for position", w, h, cycles
                     error = (real.index(w, h) - predicted_w_h) * lrate 
-                    print "assigning user vector to itself", cycles
                     uv = uF[w]
-                    print "assigning user feature vector to sum of itself plus error times movie feature", w, cycles
                     uF[w] += error * mF[h]
-                    print "assigning movie feature vector to sum of itself plus error times original user feature", h, cycles
                     mF[h] += error * uv
+                
     return uF, mF
 
 
@@ -199,14 +198,14 @@ def train_some_features(real, feature_count):
     iteration = 0
     for i in xrange(feature_count):
         uF, uM = train_one_feature(remainder) #, sigma)
-        print "writing user vector", cycles
-        uf1 = json.dumps(uF)
-        with open('feature_vector_user.json', 'a') as f:
-            f.write(uf1)
-        print "writing movie vector", cycles
-        mf1 = json.dumps(uF)
-        with open('feature_vector_movie.json', 'a') as p:
-            p.write(mf1)
+        # print "writing user vector", cycles
+        # uf1 = json.dumps(uF)
+        # with open('feature_vector_user.json', 'a') as f:
+        #     f.write(uf1)
+        # print "writing movie vector", cycles
+        # mf1 = json.dumps(uF)
+        # with open('feature_vector_movie.json', 'a') as p:
+        #     p.write(mf1)
         print "appending user features to list of vectors"
         userFeatures.append(uF)
         print "appending movie features to list of vecors"
@@ -220,27 +219,27 @@ def train_some_features(real, feature_count):
     return userFeatures, movieFeatures
     
 
-# test_matrix = get_another_test_matrix()
+test_matrix = get_another_test_matrix()
 print "setting matrix"
-test_matrix = set_matrix_with_real_data()
+# test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 2)
 
 
-print "loading to json"
-print "loading user vector"
-uf = json.dumps(uFs)
-print "loading movie vector"
-mf = json.dumps(mFs)
-print "writing user vector"
-f = open('feature_vector_user_all.json', 'w')
-f.write(uf)
-f.close
-print "writing movie vector"
-p = open('feature_vector_movie_all.json', 'w')
-p.write(mf)
-p.close 
+# print "loading to json"
+# print "loading user vector"
+# uf = json.dumps(uFs)
+# print "loading movie vector"
+# mf = json.dumps(mFs)
+# print "writing user vector"
+# f = open('feature_vector_user_all.json', 'w')
+# f.write(uf)
+# f.close
+# print "writing movie vector"
+# p = open('feature_vector_movie_all.json', 'w')
+# p.write(mf)
+# p.close 
 
 # print "loading to redis"
 # for vector_index in xrange(len(uFs)):   
