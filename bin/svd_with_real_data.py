@@ -5,8 +5,8 @@ except:
   pass
 
 import numpy
-import copy
 import random
+import time
 
 import json
 
@@ -164,6 +164,7 @@ def train_one_feature(real): #, sigma = 0.01):
     max_cycles = 400
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
+    last = time.time()
     while True:
         cycles += 1
         print 'cycles of training one vector', cycles
@@ -172,10 +173,11 @@ def train_one_feature(real): #, sigma = 0.01):
         else:
             # WHY DOES THIS LOOP TAKE FOREVER? 
             # 68878 * 10680 * 8 operations = ~5 billion operations my processor - 2.8 Ghz ~ 2.8 billion operations per second
-            j = 0
             for w in xrange(real.width): #69878
                 if w % 10000 == 0:
-                    print 'users w, movies h, cycles', w, cycles
+                    print time.time() - last
+                    print 'users w, cycles', w, cycles
+                    last = time.time()
                 for h in xrange(real.height): #10681
                 #I thought that error has to be an absolute value, but it was throwing the results off
                 #increasing the vectors all the time instead of correcting values of vectors
