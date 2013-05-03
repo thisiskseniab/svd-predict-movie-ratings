@@ -213,11 +213,11 @@ uFs, mFs = train_some_features(test_matrix, 5)
 # p.write(mf)
 # p.close 
 
-for singular in range(len(uFs)):
-  print 'user feature vector '+ str(singular), uFs[singular]
-  print 'movie feature vector '+ str(singular), mFs[singular]
-  singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
-  print singular, singular_value
+# for singular in range(len(uFs)):
+#   print 'user feature vector '+ str(singular), uFs[singular]
+#   print 'movie feature vector '+ str(singular), mFs[singular]
+#   singular_value = multiply_feature_vectors(uFs[singular], mFs[singular])
+#   print singular, singular_value
 
 
 
