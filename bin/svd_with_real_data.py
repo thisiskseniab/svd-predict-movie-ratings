@@ -175,7 +175,7 @@ def train_one_feature(real): #, sigma = 0.01):
             j = 0
             for w in xrange(real.width): #69878
                 if w % 1000 == 0:
-                    print 'users w, movies h, cycles', w, h, cycles
+                    print 'users w, movies h, cycles', w, cycles
                 for h in xrange(real.height): #10681
                 #I thought that error has to be an absolute value, but it was throwing the results off
                 #increasing the vectors all the time instead of correcting values of vectors
