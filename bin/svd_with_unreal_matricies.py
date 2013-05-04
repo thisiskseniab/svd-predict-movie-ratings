@@ -173,7 +173,7 @@ def train_some_features(real, feature_count):
             f.write(uf1)
             f.write('\n')
         print "writing movie vector", iteration
-        mf1 = json.dumps(uF)
+        mf1 = json.dumps(mF)
         with open('feature'+ str(i) +'_vector_movie.json', 'a') as p:
             p.write(mf1)
             p.write('\n')
