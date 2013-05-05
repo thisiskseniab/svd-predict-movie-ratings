@@ -49,18 +49,18 @@ def load_ratings(session):
         line = line.split('::')
         rating = model.Rating(user_id_to_index[line[0]], movie_id_to_index[line[1]], line[2], line[3])
         session.add(rating)
-        print "loaded rating", i
         i += 1
-        session.commit()
-        print "commited rating", i
+        if i % 10000 == 0:
+            session.commit()
+    session.commit()
     datafile.close()
 
 # use pypy to seed database (much faster), do it 1-by-1 to make sure everything loads
 def main(session):
-    # print "Loading users"
-    # load_users(session)
-    # print "Loading movies"
-    # load_movies(session)
+    print "Loading users"
+    load_users(session)
+    print "Loading movies"
+    load_movies(session)
     print "Loading ratings"
     load_ratings(session)
     print "Done loading"

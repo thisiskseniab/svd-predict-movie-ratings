@@ -36,6 +36,8 @@ package {
     provider => pip,
     require => Exec['pypy pip'],
     ensure => installed;
+  "libmysqlclient-dev":
+    ensure => installed;
 }
 
 exec { "distribute_setup":
@@ -55,6 +57,12 @@ package { "python-pip":
   require => Package['python']
 }
 
+package { "MySQL-python":
+  ensure => installed,
+  require => Package['python-pip'],
+  provider => pip
+}
+
 package { "sqlite3": 
   ensure => latest,
 }
@@ -64,5 +72,13 @@ package { ["Flask", "Flask-SQLAlchemy", "Flask-WTF", "Flask-Bootstrap", "Jinja2"
   provider => pip,
   require => Package['python-pip']
 }
+
+#INSTALL MYSQL
+class mysql {
+  # Installs the MySQL server and MySQL client
+  package { ['mysql-server', 'mysql-client-core-5.5']: ensure => installed, }
+ 
+}
+
 
 

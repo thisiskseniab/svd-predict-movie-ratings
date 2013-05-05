@@ -4,11 +4,11 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 Base = declarative_base()
-global ENGINE
-global session
-ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
-Base.query = session.query_property()
+# global ENGINE
+# global session
+# ENGINE = create_engine("mysql+mysqldb:///ratings.db", echo=True)
+# session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
+# Base.query = session.query_property()
 
 
 
@@ -36,7 +36,7 @@ class Movie(Base):
 
 	id = Column(Integer, primary_key = True)
 	indx = Column(Integer)
-	title = Column(String(128))
+	title = Column(String(256))
 	genre = Column(String(128))
 
 	def __init__(self, indx, title, genre):
@@ -81,7 +81,7 @@ class Tag(Base):
 
 def connect():
 	#use this for seeding the db
-	engine = create_engine("sqlite:///ratings.db", echo=False)
+	engine = create_engine("mysql+mysqldb://root@localhost/ratingsdb", echo=False)
 	session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False))
 
 
@@ -97,3 +97,14 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#to connect to mysql database ENGINE = create_engine("mysql+mysqldb://root@localhost", echo=True)
+#to create mysql detabase ENGINE.execute("CREATE DATABASE ratingsdb")
+#switch to it ENGINE.execute("USE ratingsdb")
+# Base.metadata.create_all(ENGINE)
+#to use mysql as user: mysql -u root
+#then connect to db: use ratingsdb
+#to view progress in mysql another window: select count(*) from users;
+#delete everything from a table: truncate ratings;
+
+
