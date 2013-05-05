@@ -55,6 +55,7 @@ def load_ratings(session):
     session.commit()
     datafile.close()
 
+
 # use pypy to seed database (much faster), do it 1-by-1 to make sure everything loads
 def main(session):
     print "Loading users"

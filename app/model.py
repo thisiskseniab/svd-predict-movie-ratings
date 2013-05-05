@@ -77,6 +77,20 @@ class Tag(Base):
 		self.timestamp = timestamp
 
 
+class Prediction(Base):
+	__tablename__ = "predictions"
+
+	id = Column(Integer, primary_key = True)
+	user_indx = Column(Integer)
+	movie_indx = Column(Integer)
+	rating_score = Column(Integer)
+	
+	def __init__(self, user_indx, movie_indx,rating_score):
+		self.user_indx = user_indx
+		self.movie_indx = movie_indx
+		self.rating_score = rating_score
+
+
 ### End class declarations
 
 def connect():
@@ -102,6 +116,7 @@ if __name__ == "__main__":
 #to create mysql detabase ENGINE.execute("CREATE DATABASE ratingsdb")
 #switch to it ENGINE.execute("USE ratingsdb")
 # Base.metadata.create_all(ENGINE)
+# OR: User.metadata.tables['movies'].create OR Base.metadata.tables['tablename'].create(ENGINE)
 #to use mysql as user: mysql -u root
 #then connect to db: use ratingsdb
 #to view progress in mysql another window: select count(*) from users;
