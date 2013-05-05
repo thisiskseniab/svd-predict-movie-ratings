@@ -180,9 +180,9 @@ def train_some_features(real, feature_count):
         # print "appending user features to list of vectors"
         userFeatures.append(uF)
         # print "appending movie features to list of vecors"
-        movieFeatures.append(uM)
+        movieFeatures.append(mF)
         # print "calculating singular value by multiplying feature vectors"
-        singular_value = multiply_feature_vectors(uF, uM)
+        singular_value = multiply_feature_vectors(uF, mF)
         # print "calculating ramainder (remainder minus singular_value"
         remainder = remainder.minus(singular_value)
         iteration += 1
@@ -190,9 +190,9 @@ def train_some_features(real, feature_count):
     return userFeatures, movieFeatures
     
 
-# test_matrix = get_another_test_matrix()
+test_matrix = get_another_test_matrix()
 print "setting matrix"
-test_matrix = set_matrix_with_real_data()
+# test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
 uFs, mFs = train_some_features(test_matrix, 3)
