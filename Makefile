@@ -1,6 +1,6 @@
 all: ratings_data
 
 ratings_data:
-	@[ -e data/ml-10M100K/ ] ||\
+	@[ -e mdata/ml-10M100K/ ] ||\
 		(cd data && wget http://www.grouplens.org/sites/www.grouplens.org/external_files/data/ml-10m.zip &&\
 		unzip ml-10m.zip) && echo "got ratings data"
