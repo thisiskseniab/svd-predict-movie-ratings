@@ -129,7 +129,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 30
+    max_cycles = 150
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
@@ -195,7 +195,7 @@ print "setting matrix"
 test_matrix = set_matrix_with_real_data()
 
 print "doing svd"
-uFs, mFs = train_some_features(test_matrix, 5)
+uFs, mFs = train_some_features(test_matrix, 3)
 
 
 print "loading to json"
