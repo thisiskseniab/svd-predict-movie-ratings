@@ -129,7 +129,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 25
+    max_cycles = 100
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
@@ -166,7 +166,7 @@ def train_some_features(real, feature_count):
     remainder = real
     iteration = 0
     for i in xrange(feature_count):
-        uF, uM = train_one_feature(remainder) #, sigma)
+        uF, mF = train_one_feature(remainder) #, sigma)
         print "writing user vector", iteration
         uf1 = json.dumps(uF)
         with open('feature'+ str(i) +'_vector_user.json', 'a') as f:
