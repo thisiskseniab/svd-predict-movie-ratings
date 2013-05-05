@@ -129,7 +129,7 @@ def init_feature_vectors(width, height):
 #moviefeature += eroor * userfeature
 def train_one_feature(real): #, sigma = 0.01):
     cycles = 0
-    max_cycles = 100
+    max_cycles = 30
     print "initializing feature vectors"
     uF, mF = init_feature_vectors(real.width, real.height)
     last = time.time()
