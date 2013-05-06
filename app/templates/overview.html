@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SVD Recommendation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="/static/css/flat-ui.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
+
+    <script src="/static/js/jquery-1.9.1.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+    <script>
+      function login_as_someone_else(user_index) {
+        $.ajax({
+          url: '/login',
+          type: 'POST',
+          async: false,
+          data: {
+            'user_indx': user_index
+          }
+        });
+        window.location = "/profile";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">SVD Predict Ratings</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="/">Home</a></li>
+              <li class="active"><a href="/overview">Overview</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <div class="container">
+  		<div class="row" style="margin-top: 20px;">
+          <form class="search pull-left" action="{{url_for("search")}}" method="POST">
+          <input type="search" name="query" style="margin-left:50px;" class="search-query" placeholder="Search For Movies">
+          <input type="submit" class="btn btn-primary btn-large">
+          </form>
+  		</div>
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(65000)">User 65000</a></h2></div>
+      	<div class="row">
+	        <div class="span4">
+            <h2>Ratings</h2>
+            <div class="todo mrm">
+      				<ul>
+                {% for rating in ratings_1 %}
+                <li>
+                  <div class="todo-icon fui-eye-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                          {{rating.movie.title}} &mdash; {{rating.rating}}
+                      </h4>
+                    </div>
+                </li>
+      				  {% else %}
+      				  <li>You haven't rated anything!</li>
+      				  {% endfor %}
+      				</ul>
+            </div>
+          </div>
+	        <div class="span4">
+	          <h2>Recommended Movies</h2>
+            <div class="todo mrm">
+	            <ul>
+                  {% for recommendation in recommendations_1 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+	        </div>
+          <div class="span4">
+            <h2>Netflix</h2>
+            <div class="todo mrm">
+              <ul>
+                  {% for netflix in netflix_1 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+	    </div> <!-- row -->
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(54500)">User 54500</a></h2></div>
+        <div class="row">
+          <div class="span4">
+            <h2>Ratings</h2>
+            <div class="todo mrm">
+              <ul>
+                {% for rating in ratings_2 %}
+                <li>
+                  <div class="todo-icon fui-eye-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                          {{rating.movie.title}} &mdash; {{rating.rating}}
+                      </h4>
+                    </div>
+                </li>
+                {% else %}
+                <li>You haven't rated anything!</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="span4">
+            <h2>Recommended Movies</h2>
+            <div class="todo mrm">
+              <ul>
+                  {% for recommendation in recommendations_2 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="span4">
+            <h2>Netflix</h2>
+            <div class="todo mrm">
+              <ul>
+                  {% for netflix in netflix_2 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+      </div> <!-- row -->
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(4323)">User 4323</a></h2></div>
+      <div class="row">
+          <div class="span4">
+            <h2>Ratings</h2>
+            <div class="todo mrm">
+              <ul>
+                {% for rating in ratings_3 %}
+                <li>
+                  <div class="todo-icon fui-eye-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                          {{rating.movie.title}} &mdash; {{rating.rating}}
+                      </h4>
+                    </div>
+                </li>
+                {% else %}
+                <li>You haven't rated anything!</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="span4">
+            <h2>Recommended Movies</h2>
+            <div class="todo mrm">
+              <ul>
+                  {% for recommendation in recommendations_3 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="span4">
+            <h2>Netflix</h2>
+            <div class="todo mrm">
+              <ul>
+                  {% for netflix in netflix_3 %}
+                  <li>
+                    <div class="todo-icon fui-heart-24"></div>
+                    <div class="todo-content">
+                      <h4 class="todo-name">
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      </h4>
+                    </div>
+                  </li>
+                  {% else %}
+                  <li>No recommendations for you!</li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+      </div> <!-- row -->
+    </div> <!-- container -->
+  </body>
+</html>

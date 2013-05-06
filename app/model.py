@@ -2,13 +2,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
-# global ENGINE
-# global session
-# ENGINE = create_engine("mysql+mysqldb:///ratings.db", echo=True)
-# session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
-# Base.query = session.query_property()
+global ENGINE
+global session
+ENGINE = create_engine("mysql+mysqldb://root@localhost/ratingsdb", echo=True)
+session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
+Base.query = session.query_property()
 
 
 
@@ -44,13 +46,12 @@ class Movie(Base):
 		self.title = title
 		self.genre = genre
 
-
 class Rating(Base):
 	__tablename__ = "ratings"
 
 	id = Column(Integer, primary_key = True)
-	user_indx = Column(Integer)
-	movie_indx = Column(Integer)
+	user_indx = Column(Integer, ForeignKey('users.indx'))
+	movie_indx = Column(Integer, ForeignKey('movies.indx'))
 	rating = Column(Integer)
 	timestamp = Column(Integer)
 
@@ -59,7 +60,9 @@ class Rating(Base):
 		self.movie_indx = movie_indx
 		self.rating = rating
 		self.timestamp = timestamp
-
+	
+	user = relationship("User", backref=backref("rating", order_by=user_indx))
+	movie = relationship("Movie", backref=backref("rating", order_by=movie_indx))
 
 class Tag(Base):
 	__tablename__ = "tags"
@@ -81,8 +84,8 @@ class Prediction(Base):
 	__tablename__ = "predictions"
 
 	id = Column(Integer, primary_key = True)
-	user_indx = Column(Integer)
-	movie_indx = Column(Integer)
+	user_indx = Column(Integer, ForeignKey('users.indx'))
+	movie_indx = Column(Integer, ForeignKey('movies.indx'))
 	rating_score = Column(Integer)
 	
 	def __init__(self, user_indx, movie_indx,rating_score):
@@ -90,6 +93,8 @@ class Prediction(Base):
 		self.movie_indx = movie_indx
 		self.rating_score = rating_score
 
+	user = relationship("User", backref=backref("prediction", order_by=user_indx))
+	movie = relationship("Movie", backref=backref("prediction", order_by=movie_indx))
 
 ### End class declarations
 

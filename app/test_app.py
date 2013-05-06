@@ -3,7 +3,7 @@
 from flask.ext.bootstrap import Bootstrap
 from flask import Flask, session, request, render_template, flash, redirect, url_for, g
 import model
-from model import session as db_session, User, Rating, Movie
+from model import session as db_session, User, Rating, Movie, Prediction
 import os
 
 app = Flask(__name__)
@@ -11,78 +11,56 @@ app = Flask(__name__)
 # SECRET_KEY = "fish"z
 app.config.from_object(__name__)
 
+# fix unicode in place
+def fix_unicode_movie(m):
+    m.title = m.title.decode('UTF-8')
+
 @app.teardown_request
 def shutdown_session(exception = None):
     db_session.remove()
 
 @app.before_request
-def load_user_id():
-    g.user_id = session.get('user_indx')
+def load_user_indx():
+    g.user_indx = session.get('user_indx')
 
 @app.route("/")
 def main_page():
-	return render_template('index.html')
-
-@app.route("/about")
-def about():
-    return render_template('about.html')
-
-@app.route("/users")
-def users():
-    return render_template('users.html')
-
-@app.route("/data")
-def data():
-    return render_template('data.html')
-
-@app.route("/graphs")
-def graphs():
-    return render_template('graphs.html')
-
-@app.route("/trial_experience")
-def trial_experience():
-    if g.user_id:
+    if g.user_indx:
         return redirect(url_for("display_profile"))
-    return render_template("trial_experience.html")
-
+    return render_template("index.html")
 
 @app.route("/login", methods=["POST"])
 def login():
-    email = request.form['email']
-    password = request.form['password']
-
+    user_indx = request.form['user_indx']
     try:
-        user = db_session.query(User).filter_by(email=email, password=password).one()
-    except:
-        flash("Invalid username or password", "error")
-        return redirect(url_for("trial_experience"))
+        user = db_session.query(User).filter_by(indx=user_indx).one()
+    except Exception, e:
+        print str(e)
+        flash("Invalid user id", "error")
+        return redirect(url_for("main_page"))
 
     session['user_indx'] = user.indx
     return redirect(url_for("display_profile"))
 
-@app.route("/register", methods=["POST"])
-def register():
-    email = request.form['email']
-    password = request.form['password']
-    name = request.form['name']
-    existing = db_session.query(User).filter_by(email=email).first()
-    if existing:
-        flash("Email already in use", "error")
-        return redirect(url_for("trial_experience"))
-
-    u = User(indx = 100000, email=email, password=password, name=name) #how to add indexes?
-    db_session.add(u)
-    db_session.commit()
-    db_session.refresh(u)
-    session['user_indx'] = u.indx 
-    return redirect(url_for("display_profile"))
-
 @app.route("/profile", methods=["GET"])
 def display_profile():
-    return render_template("profile.html")
+    ratings = db_session.query(User).filter_by(indx=g.user_indx).one().rating
+    
+    ratings = sorted(ratings, key=lambda ratings:ratings.rating, reverse=True)[:10]
+
+    recommendations = db_session.query(User).filter_by(indx=g.user_indx).one().prediction
+    max_score = max(recommendations, key=lambda r: r.rating_score).rating_score
+    for r in recommendations:
+        r.human_score = (5 * r.rating_score) / max_score
+        fix_unicode_movie(r.movie)
+
+    recommendations = filter(lambda r: r.human_score > 1, recommendations)
+    recommendations = sorted(recommendations, key=lambda r: r.human_score, reverse=True)[:10]
+
+    return render_template("profile.html", user_indx=g.user_indx, ratings=ratings, recommendations=recommendations)
 
 @app.route("/search", methods=["GET"])
-def display_profile():
+def movie_search():
     return render_template("profile.html")
 
 @app.route("/search", methods=["POST"])
@@ -94,67 +72,46 @@ def search():
 
     return render_template("results.html", movies=movies)
 
-@app.route("/movie/<int:indx>", methods=["GET"])
-def view_movie(indx):
-    movie = db_session.query(Movie).get(indx)
-    ratings = movie.ratings #now it breaks here
-    rating_nums = []
-    user_rating = None
-    for r in ratings:
-        if r.user_indx == session['user_indx']:
-            user_rating = r
-        rating_nums.append(r.rating)
-    avg_rating = float(sum(rating_nums))/len(rating_nums)
+@app.route("/overview", methods=["GET"])
+def overview():
+    #1
+    ratings_1 = db_session.query(User).filter_by(indx=65000).one().rating
+    ratings_1 = sorted(ratings_1, key=lambda ratings:ratings.rating, reverse=True)[:5]
+    recommendations_1 = db_session.query(User).filter_by(indx=65000).one().prediction
+    max_score_1 = max(recommendations_1, key=lambda r: r.rating_score).rating_score
+    for r_1 in recommendations_1:
+        r_1.human_score = (5 * r_1.rating_score) / max_score_1
+    recommendations_1 = sorted(recommendations_1, key=lambda r: r_1.human_score, reverse=True)[:5]
+    #2
+    ratings_2 = db_session.query(User).filter_by(indx=54500).one().rating
+    ratings_2 = sorted(ratings_2, key=lambda ratings:ratings.rating, reverse=True)[:5]
+    recommendations_2 = db_session.query(User).filter_by(indx=54500).one().prediction
+    max_score_2 = max(recommendations_2, key=lambda r: r.rating_score).rating_score
+    for r_2 in recommendations_1:
+        r_2.human_score = (5 * r_2.rating_score) / max_score_2
+    recommendations_2 = sorted(recommendations_2, key=lambda r: r_2.human_score, reverse=True)[:5]
+    #3
+    ratings_3 = db_session.query(User).filter_by(indx=4323).one().rating
+    ratings_3 = sorted(ratings_3, key=lambda ratings:ratings.rating, reverse=True)[:5]
+    recommendations_3 = db_session.query(User).filter_by(indx=4323).one().prediction
+    max_score_3 = max(recommendations_3, key=lambda r: r.rating_score).rating_score
+    for r_3 in recommendations_3:
+        r_3.human_score = (5 * r_3.rating_score) / max_score_3
+    recommendations_3 = sorted(recommendations_3, key=lambda r: r_3.human_score, reverse=True)[:5]
+    return render_template('overview.html', ratings_1=ratings_1, recommendations_1=recommendations_1,\
+                ratings_2=ratings_2, recommendations_2=recommendations_2, ratings_3=ratings_3, recommendations_3=recommendations_3)
 
-    prediction = None
-    if not user_rating:
-        user = db_session.query(User).get(g.user_indx) 
-        prediction = user.predict_rating(movie)
-        print prediction
-    
-    return render_template("movie.html", movie=movie, 
-            average=avg_rating, user_rating=user_rating,
-            prediction = prediction)
-
-@app.route("/rate/<int:id>", methods=["POST"])
-def rate_movie(id):
-    rating_number = int(request.form['rating'])
-    user_id = session['user_id']
-    rating = db_session.query(Rating).filter_by(user_id=user_id, movie_id=id).first()
-
-    if not rating:
-        flash("Rating added", "success")
-        rating = Rating(user_id=user_id, movie_id=id)
-        db_session.add(rating)
-    else:
-        flash("Rating updated", "success")
-
-    rating.rating = rating_number
-    db_session.commit()
-
-    return redirect(url_for("view_movie", id=id))
-
-@app.route("/my_ratings")
-def my_ratings():
-    if not g.user_indx:
-        flash("Please log in", "warning")
-        return redirect(url_for("index"))
-
-    ratings = db_session.query(Rating).filter_by(user_id=g.user_indx).all()
-    return render_template("my_ratings.html", ratings=ratings)
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
 @app.route("/logout")
 def logout():
     del session['user_indx']
-    return redirect(url_for("trial_experience"))
+    return redirect(url_for("main_page"))
 
 app.secret_key = '\xd0u\xf2g\xbc\xc5\x07e\xc6wz\x03\x05\xe2\xcd[d\xac\xd0\xe4\x8e\xe2\xb6\x82'
 
 if __name__ == '__main__':
-	db_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
-	if not db_uri:
-		db_uri = "sqlite:///ratings.db"
-	# model.connect(db_uri)
-	Bootstrap(app)
 	app.run(debug=True, port=int(os.environ.get("PORT", 5000)), host="0.0.0.0")
 
