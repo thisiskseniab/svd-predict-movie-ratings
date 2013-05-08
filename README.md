@@ -1,11 +1,10 @@
 svd-predict-movie-ratings
 =========================
 
-My Hackbright project:
+My Hackbright project - Kwickster! 
 
-Flask app that predicts movie ratings (TO BE NAMED)
-	- algorithm is based on singular value decomposition (svd)
+Movie recommendation engine (rating prediction algorithm) based on Singular Value Decomposition
 
 Data from MovieLens (10M100K)
 
-BEWARE: training of all movies takes many hours
+BEWARE: full training of all movies takes many DAYS
