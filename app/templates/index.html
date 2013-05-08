@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SVD Recommendation</title>
+    <title>Kwickster</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -26,12 +26,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">SVD Predict Ratings</a>
+          <a class="brand" href="/">Kwickster</a>
           <div class="nav-collapse">
             <ul class="nav">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="/overview">Overview</a></li>
-                <li><a href="/about">About</a></li>
+                <li><a href="/about">About</a>
+                <ul>
+                    <li><a href="/svd">Singular Value Decomposition</a></li>
+                    <li><a href="/lazy-eval">Lazy Evaluation</a></li>
+                    <li><a href="/challenges">Challenges</a></li>
+                    <li><a href="/data">Data</a></li>
+                </ul> <!-- /Sub menu -->
+                </li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -42,12 +49,11 @@
         <div class="login-screen" style="margin-top:20px;">
 
                 <div class="login-icon">
-                    <img src="static/images/login/icon.png" alt="Welcome to Mail App" />
-                    <h4>Welcome to <small>Mail App</small></h4>
+                    <img src="static/images/illustrations/gift.png" alt="Welcome to Kwickster" />
+                    <h4>Welcome to <small>Kwickster!</small></h4>
                 </div>
                 <form class="form-horizontal" action="{{url_for("login")}}" method="POST">
                     <div class="control-group">
-                        <label class="control-label" for="user_indx">User ID</label>
                         <div class="controls">
                             <input type="text" name="user_indx" id="inputUsername" placeholder="User ID">
                         </div>

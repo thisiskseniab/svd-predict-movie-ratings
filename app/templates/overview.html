@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SVD Recommendation</title>
+    <title>Kwickster</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -40,12 +40,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">SVD Predict Ratings</a>
+          <a class="brand" href="/">Kwickster</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/">Home</a></li>
               <li class="active"><a href="/overview">Overview</a></li>
-              <li><a href="/about">About</a></li>
+              <li><a href="/about">About</a>
+                <ul>
+                  <li><a href="/svd">Singular Value Decomposition</a></li>
+                  <li><a href="/lazy-eval">Lazy Evaluation</a></li>
+                  <li><a href="/challenges">Challenges</a></li>
+                  <li><a href="/data">Data</a></li>
+                </ul> <!-- /Sub menu -->
+              </li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -58,9 +65,9 @@
           <input type="submit" class="btn btn-primary btn-large">
           </form>
   		</div>
-      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(65000)">User 65000</a></h2></div>
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(556)">User 556</a></h2></div>
       	<div class="row">
-	        <div class="span4">
+	        <div class="span6">
             <h2>Ratings</h2>
             <div class="todo mrm">
       				<ul>
@@ -79,7 +86,7 @@
       				</ul>
             </div>
           </div>
-	        <div class="span4">
+	        <div class="span6">
 	          <h2>Recommended Movies</h2>
             <div class="todo mrm">
 	            <ul>
@@ -98,7 +105,7 @@
               </ul>
             </div>
 	        </div>
-          <div class="span4">
+          <!-- <div class="span4">
             <h2>Netflix</h2>
             <div class="todo mrm">
               <ul>
@@ -107,7 +114,7 @@
                     <div class="todo-icon fui-heart-24"></div>
                     <div class="todo-content">
                       <h4 class="todo-name">
-                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} 
                       </h4>
                     </div>
                   </li>
@@ -116,11 +123,11 @@
                   {% endfor %}
               </ul>
             </div>
-          </div>
+          </div> -->
 	    </div> <!-- row -->
-      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(54500)">User 54500</a></h2></div>
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(5774)">User 5774</a></h2></div>
         <div class="row">
-          <div class="span4">
+          <div class="span6">
             <h2>Ratings</h2>
             <div class="todo mrm">
               <ul>
@@ -139,7 +146,7 @@
               </ul>
             </div>
           </div>
-          <div class="span4">
+          <div class="span6">
             <h2>Recommended Movies</h2>
             <div class="todo mrm">
               <ul>
@@ -158,7 +165,7 @@
               </ul>
             </div>
           </div>
-          <div class="span4">
+<!--           <div class="span4">
             <h2>Netflix</h2>
             <div class="todo mrm">
               <ul>
@@ -167,7 +174,7 @@
                     <div class="todo-icon fui-heart-24"></div>
                     <div class="todo-content">
                       <h4 class="todo-name">
-                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} 
                       </h4>
                     </div>
                   </li>
@@ -176,11 +183,11 @@
                   {% endfor %}
               </ul>
             </div>
-          </div>
+          </div> -->
       </div> <!-- row -->
-      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(4323)">User 4323</a></h2></div>
+      <div class="container" style="position:relative;"><h2><a href="#" onclick="login_as_someone_else(10216)">User 10216</a></h2></div>
       <div class="row">
-          <div class="span4">
+          <div class="span6">
             <h2>Ratings</h2>
             <div class="todo mrm">
               <ul>
@@ -199,7 +206,7 @@
               </ul>
             </div>
           </div>
-          <div class="span4">
+          <div class="span6">
             <h2>Recommended Movies</h2>
             <div class="todo mrm">
               <ul>
@@ -218,7 +225,7 @@
               </ul>
             </div>
           </div>
-          <div class="span4">
+<!--           <div class="span4">
             <h2>Netflix</h2>
             <div class="todo mrm">
               <ul>
@@ -227,7 +234,7 @@
                     <div class="todo-icon fui-heart-24"></div>
                     <div class="todo-content">
                       <h4 class="todo-name">
-                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}} <!-- &mdash; {{recommendation.movie.genre}} -->
+                      {{recommendation.movie.title}} &mdash; {{recommendation.human_score}}
                       </h4>
                     </div>
                   </li>
@@ -236,7 +243,7 @@
                   {% endfor %}
               </ul>
             </div>
-          </div>
+          </div> -->
       </div> <!-- row -->
     </div> <!-- container -->
   </body>

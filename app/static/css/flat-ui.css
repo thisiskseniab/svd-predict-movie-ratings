@@ -2343,7 +2343,7 @@ body.vjs-full-window {
   padding: 123px 199px 33px 306px; }
 
 .login-icon {
-  left: 200px;
+  left: 250px;
   position: absolute;
   padding-left: 250px;
   top: 160px;
@@ -2532,3 +2532,4 @@ body.vjs-full-window {
 
 .mll, .mhl, .mal {
   margin-left: 20px; }
+
