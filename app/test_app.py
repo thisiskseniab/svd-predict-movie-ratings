@@ -47,11 +47,11 @@ def display_profile():
     ratings = db_session.query(User).filter_by(indx=g.user_indx).one().rating
     
     ratings = sorted(ratings, key=lambda ratings:ratings.rating, reverse=True)[:10]
-
+    for rat in ratings:
+        fix_unicode_movie(rat.movie)
     recommendations = db_session.query(User).filter_by(indx=g.user_indx).one().prediction
     max_score = max(recommendations, key=lambda r: r.rating_score).rating_score
     for r in recommendations:
-        r.human_score = (5 * r.rating_score) / max_score
         fix_unicode_movie(r.movie)
 
     recommendations = filter(lambda r: r.human_score > 1, recommendations)
@@ -69,34 +69,42 @@ def search():
     movies = db_session.query(Movie).\
             filter(Movie.title.ilike("%" + query + "%")).\
             limit(20).all()
-
+    for movie in movies:
+        print movie.indx        
     return render_template("results.html", movies=movies)
 
 @app.route("/overview", methods=["GET"])
 def overview():
     #1
-    ratings_1 = db_session.query(User).filter_by(indx=65000).one().rating
+    ratings_1 = db_session.query(User).filter_by(indx=556).one().rating
     ratings_1 = sorted(ratings_1, key=lambda ratings:ratings.rating, reverse=True)[:5]
-    recommendations_1 = db_session.query(User).filter_by(indx=65000).one().prediction
+    for rat_1 in ratings_1:
+        fix_unicode_movie(rat_1.movie)
+    recommendations_1 = db_session.query(User).filter_by(indx=556).one().prediction
     max_score_1 = max(recommendations_1, key=lambda r: r.rating_score).rating_score
     for r_1 in recommendations_1:
-        r_1.human_score = (5 * r_1.rating_score) / max_score_1
+        fix_unicode_movie(r_1.movie)
     recommendations_1 = sorted(recommendations_1, key=lambda r: r_1.human_score, reverse=True)[:5]
     #2
-    ratings_2 = db_session.query(User).filter_by(indx=54500).one().rating
+    ratings_2 = db_session.query(User).filter_by(indx=5774).one().rating
     ratings_2 = sorted(ratings_2, key=lambda ratings:ratings.rating, reverse=True)[:5]
-    recommendations_2 = db_session.query(User).filter_by(indx=54500).one().prediction
+    for rat_2 in ratings_2:
+        fix_unicode_movie(rat_2.movie)  
+    recommendations_2 = db_session.query(User).filter_by(indx=5774).one().prediction
     max_score_2 = max(recommendations_2, key=lambda r: r.rating_score).rating_score
-    for r_2 in recommendations_1:
-        r_2.human_score = (5 * r_2.rating_score) / max_score_2
+    for r_2 in recommendations_2:
+        fix_unicode_movie(r_2.movie)
     recommendations_2 = sorted(recommendations_2, key=lambda r: r_2.human_score, reverse=True)[:5]
     #3
-    ratings_3 = db_session.query(User).filter_by(indx=4323).one().rating
+    ratings_3 = db_session.query(User).filter_by(indx=10216).one().rating
     ratings_3 = sorted(ratings_3, key=lambda ratings:ratings.rating, reverse=True)[:5]
-    recommendations_3 = db_session.query(User).filter_by(indx=4323).one().prediction
+    for rat_3 in ratings_3:
+        print rat_3.movie.title
+        fix_unicode_movie(rat_3.movie)   
+    recommendations_3 = db_session.query(User).filter_by(indx=10216).one().prediction
     max_score_3 = max(recommendations_3, key=lambda r: r.rating_score).rating_score
     for r_3 in recommendations_3:
-        r_3.human_score = (5 * r_3.rating_score) / max_score_3
+        fix_unicode_movie(r_3.movie)
     recommendations_3 = sorted(recommendations_3, key=lambda r: r_3.human_score, reverse=True)[:5]
     return render_template('overview.html', ratings_1=ratings_1, recommendations_1=recommendations_1,\
                 ratings_2=ratings_2, recommendations_2=recommendations_2, ratings_3=ratings_3, recommendations_3=recommendations_3)
@@ -104,6 +112,22 @@ def overview():
 @app.route("/about")
 def about():
     return render_template('about.html')
+
+@app.route("/svd")
+def svd():
+    return render_template('svd_page.html')
+
+@app.route("/lazy-eval")
+def lazy_eval():
+    return render_template('lazy-eval.html')
+
+@app.route("/challenges")
+def challenges():
+    return render_template('challenges.html')
+
+@app.route("/data")
+def data():
+    return render_template('data.html')
 
 @app.route("/logout")
 def logout():

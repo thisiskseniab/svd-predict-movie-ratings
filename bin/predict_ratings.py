@@ -9,8 +9,8 @@ import sys
 sys.path.append('../app/')
 import model
 
-FEATURE_COUNT = 5
-IPF = 25
+FEATURE_COUNT = 4
+IPF = 400
 
 
 redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -137,7 +137,7 @@ def predict_users_top_50_ratings(user_index):
 		# print movie_index
 		top_predictions.append(movie_index)
 		count += 1
-		if count >= 50:
+		if count >= 10:
 			break
 	return top_predictions
 
@@ -221,7 +221,7 @@ def main(args):
 		print 'writing predictions to sql for all users...'
 		write_all_user_predictions_to_sql()
 	else:
-		wanted_user_indexes = [500, 5000, 50000]
+		wanted_user_indexes = [65000, 54500, 56]
 		for user_index in wanted_user_indexes:
 			get_user_predictions(user_index)
 
