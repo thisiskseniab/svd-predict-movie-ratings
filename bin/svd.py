@@ -135,7 +135,8 @@ def train_one_feature(real): #, sigma = 0.01):
             break
         else:
             # WHY DOES THIS LOOP TAKE FOREVER? 
-            # 68878 * 10680 * 8 operations = ~5 billion operations my processor - 2.8 Ghz ~ 2.8 billion operations per second
+            # BECAUSE IM LOOPING THROUGH ALL USERS AND MOVIES AND LOOKING UP INDEX IN A MATRIX EVERY TIME
+            # figure out a way to do it better
             for w in xrange(real.width): #69878
                 if w % 10000 == 0:
                     print time.time() - last
