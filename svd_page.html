@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Kwickster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link href="css/rickshaw.min.css" rel="stylesheet" type="text/css">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+      <script src="js/d3.v2.js"></script>
+      <script src="js/rickshaw.min.js"></script>
+      <script src="js/graph.js">
+      </script>
+  </head>
+  <body>
+    <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Kwickster</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/overview">Overview</a></li>
+                <li class="active"><a href="/about">About</a>
+                      <ul>
+                        <li><a href="svd_page.html">Singular Value Decomposition</a></li>
+                        <li><a href="lazy-eval.html">Lazy Evaluation</a></li>
+                        <li><a href="challenges.html">Challenges</a></li>
+                        <li><a href="data.html">Data</a></li>
+                      </ul> <!-- /Sub menu -->
+
+                </li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          <div class="logo"></div>
+          Singular Value Decomposition
+          <small>Movie Recommendation Algorithm</small>
+        </h1>
+      </div>
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          <img src="images/original_matrix.png" alt="original matrix" />
+          <h1>10M of Original Ratings - Sparse Matrix</h1>
+          <h3>~ 3.5 GB RAM</h3>
+        </h1>
+      </div>
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          <img src="images/fv.png" alt="feature vectors" />
+          <h1>Compute Feature Vectors that will predict ratings for all values</h1>
+        </h1>
+      </div>
+        <div class="demo-headline">
+          <h1 class="demo-logo">
+            error = (A' - Aa) * lrate
+            <h1>Error is the difference between the original rating (A') and product of vectors (Aa), 
+                times learning rate (lrate).</h1>
+          </h1>
+      </div>
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          uF[u] += error * mF[m]
+          mF[m] += error * uF[u]  
+          <h1>Assign initial value to the vector, and train each vector in a loop</h1>
+        </h1>
+      </div>
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+        Multiply all vectors accordingly to get predictions 
+        <h1>Substract prediction matrix from the original ratings to get the error matrix.
+          Train new set of vectors on the error matrix.</h1>
+        </h1>
+      </div>
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          <img src="images/sum_of_fv.png" alt="prediction calculation" /> 
+        <h1> Get a set of vectors, each vector represents a feature.<br />
+          The sum of the products of all vectors produces an accurate prediction</h1>
+        </h1>
+      </div>
+      <div class="demo-headline">
+        <div id="chart" style="margin-left:350px;"></div>
+        <h1>Each feature has an effect on users' ratings - from highest (first feature) to lowest (last feature)</h1>
+      </div>
+
+    </div><!-- container -->
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="js/jquery.dropkick-1.0.0.js"></script>
+    <script src="js/custom_checkbox_and_radio.js"></script>
+    <script src="js/custom_radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+    <script src="js/application.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/rickshaw.min.js"></script>
+    <script src="js/graph.js"></script>
+    <!--[if lt IE 8]>
+      <script src="js/icon-font-ie7.js"></script>
+      <script src="js/icon-font-ie7-24.js"></script>
+    <![endif]-->
+  </body>
+</html>
