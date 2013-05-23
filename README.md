@@ -59,7 +59,7 @@ Speed Concerns
 Python is inefficient in looping over the whole data of almost 70,000 users and 11,000 users, and this
 loop in training of each feature takes the longest - https://github.com/ksenish/svd-predict-movie-ratings/blob/master/bin/svd.py#L140-L152
 
-I used pypy that helped to solve some speed concerns (it is about 10x faster than python), but the full training of 5 feature vectors with 800 ipf(iterations per features) takes 3.5 days even after implementing Lazy Evaluation.
+I used PyPy that helped to solve some speed concerns (it is about 10x faster than Python), but the full training of 5 feature vectors with 800 ipf(iterations per features) takes 3.5 days even after implementing Lazy Evaluation.
 
 Future Optimization Techniques
 ==============================
