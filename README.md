@@ -56,11 +56,10 @@ About - http://ksenish.github.io/svd-predict-movie-ratings/lazy-eval.html
 
 Speed Concerns
 ==============
-The full training of 5 feature vectors with 800 ipf(iterations per features) takes 3.5 days even after 
-implementing Lazy Evaluation.
-
 Python is inefficient in looping over the whole data of almost 70,000 users and 11,000 users, and this
 loop in training of each feature takes the longest - https://github.com/ksenish/svd-predict-movie-ratings/blob/master/bin/svd.py#L140-L152
+
+I used pypy that helped to solve some speed concerns (it is about 10x faster than python), but the full training of 5 feature vectors with 800 ipf(iterations per features) takes 3.5 days even after implementing Lazy Evaluation.
 
 Future Optimization Techniques
 ==============================
@@ -71,6 +70,7 @@ Because of the way math is computed in SVD, I wasn't able to break up the code s
 (*) Multithreading
 
 The same concerns as with previous technique. It is possible that the problematic loop can be broken down in several parts and computed separately, but I wasn't able to figure out the way yet. 
+
 
 
 
